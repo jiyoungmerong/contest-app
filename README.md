@@ -79,7 +79,7 @@
 > 
 > Git : [https://github.com/jiyoungmerong](https://github.com/jiyoungmerong)
 >
-> BLOG : [https://jiyoungmerong.tistory.com] (https://jiyoungmerong.tistory.com)
+> BLOG : [https://jiyoungmerong.tistory.com/] (https://jiyoungmerong.tistory.com/)
 > 
 > Branch : hjy
 
