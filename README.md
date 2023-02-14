@@ -4,7 +4,6 @@
 
 ### ABOUT-TEAM
 **✏️TEAM NAME**
-- lead me to it!
 - 팀 이름 의미
 <br>
 
