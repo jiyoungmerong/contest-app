@@ -21,8 +21,10 @@
 - 주요 서비스
 
 **✏️기대 효과**
-- 
+- 기대 효과
 <br>
+
+### DEVELOP
 
 **✏️개발 분야**
 - IOS
@@ -33,17 +35,6 @@
 - (Deploy)
 <br>
 
-**✏️대표 컬러**
-- 참고 사이트 : [https://colorhunt.co/](https://colorhunt.co/)
-- 
-
-<br>
-
-**✏️로고**
-
-
-# Develop
-
 **✏️FlowChart**
 - flowchart img
 
@@ -53,6 +44,19 @@
 **✏️DEVELOP TIMELINE**
 - 
 <br>
+
+### DESIGN
+**✏️대표 컬러**
+- 참고 사이트 : [https://colorhunt.co/](https://colorhunt.co/)
+<br>
+
+**✏️로고**
+- logo img
+<br>
+
+**✏️UI/UX**
+- uiux img
+
 
 # DEVELOPER
 
