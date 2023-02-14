@@ -45,10 +45,10 @@
 # Develop
 
 **✏️FlowChart**
-
+- flowchart img
 
 **✏️DATABASE**
-- 수정 중
+- ERD img
 
 **✏️DEVELOP TIMELINE**
 - 
