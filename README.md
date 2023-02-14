@@ -19,6 +19,7 @@
 
 **✏️주요 서비스**
 - 주요 서비스
+<br>
 
 **✏️기대 효과**
 - 기대 효과
@@ -37,12 +38,14 @@
 
 **✏️FlowChart**
 - flowchart img
+<br>
 
 **✏️DATABASE**
 - ERD img
+<br>
 
 **✏️DEVELOP TIMELINE**
-- 
+- timeline img or writing
 <br>
 
 ### DESIGN
@@ -56,7 +59,7 @@
 
 **✏️UI/UX**
 - uiux img
-
+<br>
 
 # DEVELOPER
 
