@@ -8,6 +8,8 @@
 - 팀 이름 의미
 <br>
 
+### ABOUT-PROJECT
+
 **✏️기획 의도**
 - 기획 의도
 <br>
@@ -54,7 +56,7 @@
 - 
 <br>
 
-# Developer
+### DEVELOPER
 
 **😋천성우**
 
@@ -98,7 +100,7 @@
 > 
 > Branch : psy
 
-# Design
+# DESIGN
 
 **🙃윤다혜**
 
