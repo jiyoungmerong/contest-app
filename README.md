@@ -105,7 +105,7 @@
 > 
 > Branch : psy
 
-# DESIGN
+# PLAN & DESIGN
 
 **🙃윤다혜**
 
