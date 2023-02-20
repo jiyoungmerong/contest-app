@@ -65,7 +65,7 @@
 
 **😋천성우**
 
-> Position : MOBILE
+> Position : MOBILE-FRONT
 > 
 > Git : [https://github.com/cjs1399](https://github.com/cjs1399)
 > 
@@ -73,7 +73,7 @@
 
 **😆봉주헌**
 
-> Position : MOBILE
+> Position : MOBILE-FRONT
 > 
 > Git : [https://github.com/Bongjooheon](https://github.com/Bongjooheon)
 > 
