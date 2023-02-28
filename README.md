@@ -28,7 +28,7 @@
 ### DEVELOP
 
 **✏️개발 분야**
-- IOS
+- MOBILE - IOS
 <br>
 
 **✏️주요 기술**
@@ -65,7 +65,7 @@
 
 **😋천성우**
 
-> Position : MOBILE-FRONT
+> Position : FRONT
 > 
 > Git : [https://github.com/cjs1399](https://github.com/cjs1399)
 > 
@@ -73,7 +73,7 @@
 
 **😆봉주헌**
 
-> Position : MOBILE-FRONT
+> Position : FRONT
 > 
 > Git : [https://github.com/Bongjooheon](https://github.com/Bongjooheon)
 > 
@@ -99,7 +99,7 @@
 
 **🤢박신영**
 
-> Position : MOBILE-FRONT
+> Position : FRONT
 > 
 > Git : [https://github.com/ParkSY0919](https://github.com/ParkSY0919)
 > 
@@ -109,7 +109,7 @@
 
 **🙃윤다혜**
 
-> Position : DESIGN | 노션관리 | README관리
+> Position : DESIGN | MANAGEMENT
 > 
 > Git : [https://github.com/Rahdduru](https://github.com/Rahdduru)
 > 
