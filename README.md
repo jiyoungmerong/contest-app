@@ -109,7 +109,7 @@
 
 **🙃윤다혜**
 
-> Position : DESIGN | MANAGEMENT
+> Position : PLAN | DESIGN | MANAGEMENT
 > 
 > Git : [https://github.com/Rahdduru](https://github.com/Rahdduru)
 > 
