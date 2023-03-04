@@ -18,3 +18,22 @@ spring:
   sql:
     init:
       mode: always
+
+  mail:
+    host: smtp.naver.com #smtp ?? ??
+    port: 465 # ?? ???? ??
+    username: gjwldud0719 #??? ???
+    password: jiyoung0343! #??? ????
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          #            required: true
+          auth: true
+          #          connectiontimeout: 5000
+          #          timeout: 5000
+          #          writetimeout: 5000
+          ssl:
+            trust: smtp.naver.com
+            enable: true #??? ?? -> SSL ??? ?????

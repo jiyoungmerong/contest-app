@@ -1,6 +1,6 @@
 package com.example.contest_app.domain;
-import lombok.*;
 
+import lombok.*;
 import javax.persistence.*;
 
 @Entity
@@ -17,6 +17,10 @@ public class User {
 
     @Column(unique = true)
     private String password; // 비밀번호
+
+    private String checkpassword; // 비밀번호확인
+
+    private String email; // 이메일
 
     @Column(length = 10)
     private String name; // 이름
@@ -38,9 +42,11 @@ public class User {
 
     private boolean double_major; // 복수전공
 
-    private double grades; // 평균학점
-
     private boolean status; // 이메일 인증 여부
 
-    private int semester; // 학기
+    private String authNum; // 인증코드
+
+    // public void emailVerifiedSuccess() { // 이메일 인증 진행해주는 메소드
+//        this.status = true;
+//    }
 }
