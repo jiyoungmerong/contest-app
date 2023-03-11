@@ -11,7 +11,7 @@ import SwiftUI
 struct SkhuAZApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Evaluation_Write_noG()
         }
     }
 }
