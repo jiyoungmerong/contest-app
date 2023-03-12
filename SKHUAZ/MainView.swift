@@ -7,7 +7,7 @@ struct MainView: View {
             VStack(spacing: 10){
                 Image("Logo")
                     .resizable()
-                    .frame(width: .infinity, height: 200)
+                    .frame(width: 400, height: 200)
                     .padding(.bottom, 5)
                 user_data()
                     .padding(.bottom, 5)
