@@ -11,6 +11,26 @@
 		E348FAB129BF47A400FFF107 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAB029BF47A400FFF107 /* ContentView.swift */; };
 		E348FAB329BF47A600FFF107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E348FAB229BF47A600FFF107 /* Assets.xcassets */; };
 		E348FAB629BF47A600FFF107 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E348FAB529BF47A600FFF107 /* Preview Assets.xcassets */; };
+		E348FABD29BF4A8F00FFF107 /* TabbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FABC29BF4A8F00FFF107 /* TabbarView.swift */; };
+		E348FABF29BF4AA300FFF107 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FABE29BF4AA300FFF107 /* LoginView.swift */; };
+		E348FAC129BF4AB700FFF107 /* Find_UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAC029BF4AB700FFF107 /* Find_UserData.swift */; };
+		E348FAC329BF4ACC00FFF107 /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAC229BF4ACC00FFF107 /* SignUp.swift */; };
+		E348FAC529BF4AE100FFF107 /* EvaluationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAC429BF4AE100FFF107 /* EvaluationView.swift */; };
+		E348FAC729BF4AF300FFF107 /* CustomDropdownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAC629BF4AF300FFF107 /* CustomDropdownMenu.swift */; };
+		E348FAC929BF4B0B00FFF107 /* extensionPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAC829BF4B0B00FFF107 /* extensionPalette.swift */; };
+		E348FACB29BF4B2000FFF107 /* CurriculumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FACA29BF4B2000FFF107 /* CurriculumView.swift */; };
+		E348FACD29BF4B3400FFF107 /* CurriculumSWView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FACC29BF4B3400FFF107 /* CurriculumSWView.swift */; };
+		E348FACF29BF4B4900FFF107 /* CurriculumJavaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FACE29BF4B4900FFF107 /* CurriculumJavaView.swift */; };
+		E348FAD129BF4B5C00FFF107 /* warningAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAD029BF4B5C00FFF107 /* warningAlertView.swift */; };
+		E348FAD329BF4B6C00FFF107 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAD229BF4B6C00FFF107 /* MainView.swift */; };
+		E348FAD529BF4B7A00FFF107 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAD429BF4B7A00FFF107 /* RootView.swift */; };
+		E348FAD729BF4BAB00FFF107 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAD629BF4BAB00FFF107 /* SettingView.swift */; };
+		E348FAD929BF4BCB00FFF107 /* authView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAD829BF4BCB00FFF107 /* authView.swift */; };
+		E348FADB29BF4BDB00FFF107 /* editProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FADA29BF4BDB00FFF107 /* editProfileView.swift */; };
+		E348FADD29BF4BF100FFF107 /* setalarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FADC29BF4BF100FFF107 /* setalarmView.swift */; };
+		E348FADF29BF4C0000FFF107 /* setModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FADE29BF4C0000FFF107 /* setModeView.swift */; };
+		E348FAE129BF4C1200FFF107 /* communityRuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAE029BF4C1200FFF107 /* communityRuleView.swift */; };
+		E348FAE329BF4C1D00FFF107 /* quitAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348FAE229BF4C1D00FFF107 /* quitAccountView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +39,26 @@
 		E348FAB029BF47A400FFF107 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E348FAB229BF47A600FFF107 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E348FAB529BF47A600FFF107 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E348FABC29BF4A8F00FFF107 /* TabbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarView.swift; sourceTree = "<group>"; };
+		E348FABE29BF4AA300FFF107 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		E348FAC029BF4AB700FFF107 /* Find_UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Find_UserData.swift; sourceTree = "<group>"; };
+		E348FAC229BF4ACC00FFF107 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
+		E348FAC429BF4AE100FFF107 /* EvaluationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationView.swift; sourceTree = "<group>"; };
+		E348FAC629BF4AF300FFF107 /* CustomDropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDropdownMenu.swift; sourceTree = "<group>"; };
+		E348FAC829BF4B0B00FFF107 /* extensionPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensionPalette.swift; sourceTree = "<group>"; };
+		E348FACA29BF4B2000FFF107 /* CurriculumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumView.swift; sourceTree = "<group>"; };
+		E348FACC29BF4B3400FFF107 /* CurriculumSWView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumSWView.swift; sourceTree = "<group>"; };
+		E348FACE29BF4B4900FFF107 /* CurriculumJavaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumJavaView.swift; sourceTree = "<group>"; };
+		E348FAD029BF4B5C00FFF107 /* warningAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = warningAlertView.swift; sourceTree = "<group>"; };
+		E348FAD229BF4B6C00FFF107 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		E348FAD429BF4B7A00FFF107 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		E348FAD629BF4BAB00FFF107 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		E348FAD829BF4BCB00FFF107 /* authView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = authView.swift; sourceTree = "<group>"; };
+		E348FADA29BF4BDB00FFF107 /* editProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = editProfileView.swift; sourceTree = "<group>"; };
+		E348FADC29BF4BF100FFF107 /* setalarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setalarmView.swift; sourceTree = "<group>"; };
+		E348FADE29BF4C0000FFF107 /* setModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setModeView.swift; sourceTree = "<group>"; };
+		E348FAE029BF4C1200FFF107 /* communityRuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = communityRuleView.swift; sourceTree = "<group>"; };
+		E348FAE229BF4C1D00FFF107 /* quitAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = quitAccountView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +93,26 @@
 			children = (
 				E348FAAE29BF47A400FFF107 /* pbchApp.swift */,
 				E348FAB029BF47A400FFF107 /* ContentView.swift */,
+				E348FABC29BF4A8F00FFF107 /* TabbarView.swift */,
+				E348FABE29BF4AA300FFF107 /* LoginView.swift */,
+				E348FAC029BF4AB700FFF107 /* Find_UserData.swift */,
+				E348FAC229BF4ACC00FFF107 /* SignUp.swift */,
+				E348FAC429BF4AE100FFF107 /* EvaluationView.swift */,
+				E348FAC629BF4AF300FFF107 /* CustomDropdownMenu.swift */,
+				E348FAC829BF4B0B00FFF107 /* extensionPalette.swift */,
+				E348FACA29BF4B2000FFF107 /* CurriculumView.swift */,
+				E348FACC29BF4B3400FFF107 /* CurriculumSWView.swift */,
+				E348FACE29BF4B4900FFF107 /* CurriculumJavaView.swift */,
+				E348FAD029BF4B5C00FFF107 /* warningAlertView.swift */,
+				E348FAD229BF4B6C00FFF107 /* MainView.swift */,
+				E348FAD429BF4B7A00FFF107 /* RootView.swift */,
+				E348FAD629BF4BAB00FFF107 /* SettingView.swift */,
+				E348FAD829BF4BCB00FFF107 /* authView.swift */,
+				E348FADA29BF4BDB00FFF107 /* editProfileView.swift */,
+				E348FADC29BF4BF100FFF107 /* setalarmView.swift */,
+				E348FADE29BF4C0000FFF107 /* setModeView.swift */,
+				E348FAE029BF4C1200FFF107 /* communityRuleView.swift */,
+				E348FAE229BF4C1D00FFF107 /* quitAccountView.swift */,
 				E348FAB229BF47A600FFF107 /* Assets.xcassets */,
 				E348FAB429BF47A600FFF107 /* Preview Content */,
 			);
@@ -137,8 +197,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E348FADB29BF4BDB00FFF107 /* editProfileView.swift in Sources */,
+				E348FAC729BF4AF300FFF107 /* CustomDropdownMenu.swift in Sources */,
+				E348FAD329BF4B6C00FFF107 /* MainView.swift in Sources */,
+				E348FAC929BF4B0B00FFF107 /* extensionPalette.swift in Sources */,
+				E348FAC129BF4AB700FFF107 /* Find_UserData.swift in Sources */,
+				E348FACB29BF4B2000FFF107 /* CurriculumView.swift in Sources */,
+				E348FAD729BF4BAB00FFF107 /* SettingView.swift in Sources */,
+				E348FAC329BF4ACC00FFF107 /* SignUp.swift in Sources */,
+				E348FAD129BF4B5C00FFF107 /* warningAlertView.swift in Sources */,
+				E348FAD929BF4BCB00FFF107 /* authView.swift in Sources */,
+				E348FABD29BF4A8F00FFF107 /* TabbarView.swift in Sources */,
 				E348FAB129BF47A400FFF107 /* ContentView.swift in Sources */,
+				E348FADF29BF4C0000FFF107 /* setModeView.swift in Sources */,
+				E348FACF29BF4B4900FFF107 /* CurriculumJavaView.swift in Sources */,
+				E348FAE129BF4C1200FFF107 /* communityRuleView.swift in Sources */,
+				E348FABF29BF4AA300FFF107 /* LoginView.swift in Sources */,
 				E348FAAF29BF47A400FFF107 /* pbchApp.swift in Sources */,
+				E348FAE329BF4C1D00FFF107 /* quitAccountView.swift in Sources */,
+				E348FACD29BF4B3400FFF107 /* CurriculumSWView.swift in Sources */,
+				E348FAC529BF4AE100FFF107 /* EvaluationView.swift in Sources */,
+				E348FAD529BF4B7A00FFF107 /* RootView.swift in Sources */,
+				E348FADD29BF4BF100FFF107 /* setalarmView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
