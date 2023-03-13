@@ -54,7 +54,7 @@
 <br>
 
 **✏️로고**
-- logo img
+- [skhuaz_logo](https://user-images.githubusercontent.com/49307827/224651317-afa30cb9-c244-4058-be41-e4d36bb47cfc.png)
 <br>
 
 **✏️UI/UX**
