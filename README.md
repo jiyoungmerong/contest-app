@@ -58,9 +58,13 @@
 <br>
 <img src = "https://user-images.githubusercontent.com/49307827/224651317-afa30cb9-c244-4058-be41-e4d36bb47cfc.png">
 <br>
+<br>
 
 **✏️UI/UX**
-- uiux img
+<br>
+<br>
+<img src="https://user-images.githubusercontent.com/49307827/224653514-d0635f6c-a27f-4afd-b68f-d62ffa17c1f1.png">
+<br>
 <br>
 
 # DEVELOPER
