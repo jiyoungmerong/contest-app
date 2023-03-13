@@ -64,6 +64,7 @@
 <br>
 <br>
 <img src="https://user-images.githubusercontent.com/49307827/224653514-d0635f6c-a27f-4afd-b68f-d62ffa17c1f1.png">
+[SKHUAZ_Figma](https://www.figma.com/file/sfcCedIBiA6FXPj276HxrS/PBCH%5E2?node-id=478%3A482&t=m60M9N0Vc4uRlTGv-1)
 <br>
 <br>
 
