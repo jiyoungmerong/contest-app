@@ -8,15 +8,13 @@ import lombok.Data;
 public class UserDto {
     // 회원가입 요청 DTO
 
-    private String id; // 학번
+    private int user_id;
+
+    private String email; // 이메일
 
     private String password; // 비밀번호
 
     private String checkpassword; // 비밀번호 확인
-
-    private String email; // 이메일
-
-    private String name; // 이름
 
     private String nickname; // 닉네임
 
@@ -32,17 +30,16 @@ public class UserDto {
 
     private boolean double_major; // 복수전공
 
-    private boolean status; // 이메일 인증 여부
+    // private boolean status; // 이메일 인증 여부
 
-    private String mail_key; // 인증코드
+    // private String mail_key; // 인증코드
 
 
     public User toEntity(){
         return User.builder()
-                .id(id)
+                .user_id(user_id)
                 .password(password)
                 .email(email)
-                .name(name)
                 .nickname(nickname)
                 .graduate(graduate)
                 .major1(major1)
@@ -50,7 +47,6 @@ public class UserDto {
                 .department(department)
                 .major_minor(major_minor)
                 .double_major(double_major)
-                .status(status)
                 .build();
     }
 

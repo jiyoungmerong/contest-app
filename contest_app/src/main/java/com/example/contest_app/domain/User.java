@@ -2,10 +2,11 @@ package com.example.contest_app.domain;
 
 import lombok.*;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="User")
 @AllArgsConstructor
@@ -13,17 +14,14 @@ import javax.persistence.*;
 public class User {
 
     @Id // pk
-    private String id; // 학번
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int user_id;
 
     @Column(unique = true)
     private String password; // 비밀번호
 
-    private String checkpassword; // 비밀번호확인
+    private String email; // 이메일. 얘가 아이디가 될 거임
 
-    private String email; // 이메일
-
-    @Column(length = 10)
-    private String name; // 이름
 
     @Column(length = 10, unique = true)
     private String nickname; // 닉네임
@@ -42,11 +40,9 @@ public class User {
 
     private boolean double_major; // 복수전공
 
-    private boolean status; // 이메일 인증 여부
-
     private String authNum; // 인증코드
 
-    // public void emailVerifiedSuccess() { // 이메일 인증 진행해주는 메소드
-//        this.status = true;
-//    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evaluation> evaluations = new ArrayList<>();
+
 }
