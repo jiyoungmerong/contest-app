@@ -9,9 +9,9 @@ struct LoginView: View {
     var body: some View {
         NavigationView{
             VStack{
-                Image(systemName: "apple.logo")
+                Image("SKHUAZ")
                     .resizable()
-                    .frame(width: 50, height: 50)
+                    .frame(width: 250, height: 60)
                     .padding(.bottom)
                 TextField("아이디를 입력해주세요", text: $student_id)
                     .padding()
@@ -33,7 +33,7 @@ struct LoginView: View {
                             .padding()
                             .background(Color(red: 0.603, green: 0.756, blue: 0.819))
                             .cornerRadius(10)
-
+                        
                     })
                 
                 
@@ -47,14 +47,21 @@ struct LoginView: View {
                                 .font(.system(size: 10))
                                 .foregroundColor(Color.gray)
                         })
-                    NavigationLink(
-                        destination: SignUpView(),
-                        label:{
-                            Text("회원가입")
-                                .font(.system(size: 10))
-                                .foregroundColor(Color.gray)
-                                .padding(.trailing)
-                        })
+                    //                    NavigationLink(
+                    //                        destination: SignUpView(),
+                    //                        label:{
+                    //                            Text("회원가입")
+                    //                                .font(.system(size: 10))
+                    //                                .foregroundColor(Color.gray)
+                    //                                .padding(.trailing)
+                    //                        })
+                    NavigationLink(destination: SignUpView().navigationBarTitle(Text("SKHUAZ"), displayMode: .inline)) {
+                        Text("회원가입")
+                            .font(.system(size: 10))
+                            .foregroundColor(Color.gray)
+                            .padding(.trailing)
+                    }
+                    
                     
                 }
                 
