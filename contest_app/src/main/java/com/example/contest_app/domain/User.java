@@ -7,6 +7,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="User")
 @AllArgsConstructor
@@ -15,16 +16,18 @@ public class User {
 
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
+    private int id;
+
+    private String email; // 이메일. 얘가 아이디가 될 거임
 
     @Column(unique = true)
     private String password; // 비밀번호
 
-    private String email; // 이메일. 얘가 아이디가 될 거임
-
 
     @Column(length = 10, unique = true)
     private String nickname; // 닉네임
+
+    private int semester; // 학기
 
     private boolean graduate; // 졸업 여부
 
@@ -40,9 +43,15 @@ public class User {
 
     private boolean double_major; // 복수전공
 
-    private String authNum; // 인증코드
+    private boolean isEmailVerified; // 이메일 인증 되었는지
+
+    @Column(length = 1000)
+    public String routeInfo; // 루트추천 저장
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Evaluation> evaluations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Route> routes = new ArrayList<>();
 
 }

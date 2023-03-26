@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,18 +26,20 @@ public class EmailController {
     }
 
 
-    @PostMapping("/verify")
-    public String verifyEmail(@RequestParam("code") String code) {
+    @PostMapping("/verify") // 이메일 인증하기 버튼
+    public ResponseEntity<Map<String, Object>> verifyEmail(@RequestParam("code") String code) {
+        Map<String, Object> resultMap = new HashMap<>();
+
         String sessionCode = (String) session.getAttribute("emailCode");
         if (sessionCode != null && sessionCode.equals(code)) {
             // 인증 성공
-            return "Success";
+            resultMap.put("success", true);
+            return ResponseEntity.ok(resultMap);
         } else {
             // 인증 실패
-            return "Fail";
+            resultMap.put("success", false);
+            return ResponseEntity.ok(resultMap);
         }
     }
-
-
 
 }

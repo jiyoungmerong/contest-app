@@ -7,14 +7,13 @@ import lombok.Data;
 @Builder
 public class EvaluationDto {
 
+    private String lecture; // 강의명
 
-    private String department_name;
+    private String prfs; // 교수님
 
-    private String lecture;
+    private boolean is_major_required; // 전공 필수인지 선택인지
 
-    private String prfs;
-
-    private boolean is_major_required;
+    private String department; // 전공 구분
 
     private int class_year; // 수강년도
 
@@ -30,7 +29,5 @@ public class EvaluationDto {
 
     private String review; // 총평
 
-    private String total_star; // 총 점수
-
-
+    private int total_star; // 총 점수
 }

@@ -1,1 +1,1 @@
-use contest;
+use SKHUAZ;

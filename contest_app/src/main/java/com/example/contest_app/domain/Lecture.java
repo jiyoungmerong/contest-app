@@ -3,6 +3,8 @@ package com.example.contest_app.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -11,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Lecture { // 강의
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lecture_id")
@@ -25,17 +26,20 @@ public class Lecture { // 강의
     @Column(name = "lecture_name" + "_" + "prfs_name", insertable = false, updatable = false)
     private String lecture;
 
-    private boolean isMajorRequired; // 전공 필수인지 선택인지
+    private boolean isMajorRequired; // 전공 필수인지 선택인지 필수면 true, 선택이면 false
 
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
+    private String department; // 전공 구분
+
+    @OneToMany(mappedBy = "lecture")
+    private List<Evaluation> evaluations;
+
+    @OneToMany(mappedBy = "lecture")
+    private List<Route> route;
 
     @Builder
     public Lecture(String name, String prfs) {
         this.name = name;
         this.prfs = prfs;
     }
-
 
 }

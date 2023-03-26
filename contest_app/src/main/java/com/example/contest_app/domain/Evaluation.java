@@ -37,8 +37,7 @@ public class Evaluation {
     @Column(length = 150)
     private String review; // 총평
 
-    @Column(length = 5)
-    private String total_star; // 총 점수
+    private int total_star; // 총 점수
 
 //    private int like = 0; //추천 수
 //
@@ -47,10 +46,6 @@ public class Evaluation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dapartment_id")
-    private Department department;
 
     // 강의평가 - 유저
     @ManyToOne(fetch = FetchType.LAZY)

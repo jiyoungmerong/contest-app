@@ -1,9 +1,8 @@
 package com.example.contest_app.service;
-import com.example.contest_app.domain.Evaluation;
+import com.example.contest_app.domain.Route;
 import com.example.contest_app.exception.InvalidPasswordException;
 import com.example.contest_app.exception.UserNotFoundException;
 import com.example.contest_app.repository.EvaluationRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,24 +35,36 @@ public class UserService {
 //        userRepository.save(userDto.toEntity());
 //    }
 
-    public int save(UserDto userDto){
+    public void save(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        return userRepository.save(userDto.toEntity()).getUser_id();
+        userRepository.save(userDto.toEntity());
     }
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
 
     public User findByEmail(String email){
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다." + email));
     }
 
+    public boolean checkDuplicateNickname(String username) {
+        return userRepository.findByNickname(username).isPresent();
+    }
 
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
-//        Optional<User> user = userRepository.findByEmail(email);
-//        if(user == null){
-//            throw new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.");
-//        }
-//        return new Customer
-//    }
+
+    public List<String> getRouteInfo(User user) {
+        Optional<User> optionalUser = userRepository.findByNickname(user.getNickname());
+        if (optionalUser.isPresent()) {
+            User foundUser = optionalUser.get();
+            return Collections.singletonList(foundUser.getRouteInfo());
+        }
+        return Collections.emptyList();
+    }
+
+
 
 
     public String login(String email, String password) {
@@ -79,19 +93,12 @@ public class UserService {
             throw new UserNotFoundException("사용자를 찾을 수 없습니다.");
         }
         User user = userOptional.get();
-        if(!isCorrectPassword(user.getUser_id(), password)){
+        if(!isCorrectPassword(user.getId(), password)){
             throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
         userRepository.delete(user);
     }
 
-//    public Optional<User> authenticate(String email, String password){
-//        Optional<User> user = userRepository.findByEmail(email);
-//        if(user == null){
-//            return null;
-//        }
-//        else
-//            return user;
-//    }
+
 
 }
