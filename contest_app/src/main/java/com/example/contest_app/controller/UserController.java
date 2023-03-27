@@ -152,7 +152,7 @@ public class UserController {
             user.setMajor1(userDto.getMajor1());
             user.setMajor2(userDto.getMajor2());
             userRepository.save(user);
- 
+
             // User 객체를 UserDto로 변환하여 전송
             UserDto updatedUserDto = UserDto.convertToDto(optionalUser);
             return ResponseEntity.ok(updatedUserDto);

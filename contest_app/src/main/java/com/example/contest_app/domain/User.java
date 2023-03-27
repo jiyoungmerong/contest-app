@@ -54,4 +54,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Route> routes = new ArrayList<>();
 
+    public void addRoute(Route route) {
+        routes.add(route);
+        route.setUser(this);
+    }
+
+//    public void removeRoute(Route route) {
+//        routes.remove(route);
+//        route.setUser(null);
+//    }
+
 }

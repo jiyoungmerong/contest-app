@@ -32,42 +32,7 @@ public class RouteController {
     private final RouteService routeService;
     private final RouteRepository routeRepository;
 
-        // Autowired 등 필요한 필드/생성자 생략
-
-    @PostMapping("/routes") // 루트 저장. 미졸업자.
-    public ResponseEntity<?> createRoute(@Valid @RequestBody RouteDto routeDto, BindingResult result, Authentication authentication) {
-        if (result.hasErrors()) {
-            // 입력값 검증 실패 시, 에러 메시지를 포함한 응답 반환
-            Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error : result.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-        // 현재 로그인되어 있는 사용자의 정보를 가져오기
-        User user = (User) authentication.getPrincipal();
-
-        // RouteDto를 Route 엔티티로 변환
-        Route route = routeDto.toEntity();
-        route.setDate(LocalDate.now());
-        route.setUser(user);
-
-        // Route 엔티티 저장
-        Route savedRoute = routeRepository.save(route);
-
-        // 저장된 Route 엔티티를 RouteDto로 변환하여 반환
-        RouteDto savedRouteDto = RouteDto.builder()
-                .title(savedRoute.getTitle())
-                .department(savedRoute.getDepartment())
-                .date(savedRoute.getDate())
-                .recommendation(savedRoute.getRecommendation())
-                .build();
-
-        return ResponseEntity.ok(savedRouteDto);
-    }
-
-    @PostMapping("/save-route-info") // 루트 저장버튼
+    @PostMapping("/save-route-info") // 선수과목제도에서 작성한 루트 저장버튼.
     public ResponseEntity<String> saveRouteInfo(@RequestParam("routeInfo") String routeInfo, Authentication authentication) {
         try {
             User user = (User) authentication.getPrincipal();
@@ -81,12 +46,54 @@ public class RouteController {
         }
     }
 
+//    @PostMapping("/save/route") // 루트 저장 버튼
+//    public ResponseEntity<?> createRoute(@Valid @RequestBody RouteDto routeDto, BindingResult result, Authentication authentication) {
+//        if (result.hasErrors()) {
+//            Map<String, String> errorMap = new HashMap<>();
+//            for (FieldError error : result.getFieldErrors()) {
+//                errorMap.put(error.getField(), error.getDefaultMessage());
+//            }
+//            return ResponseEntity.badRequest().body(errorMap);
+//        }
+//
+//        User user = (User) authentication.getPrincipal();
+//
+//        Route route = routeDto.toEntity();
+//        route.setUser(user);
+//        Route savedRoute = routeRepository.save(route);
+//
+//        RouteDto responseDto = new RouteDto(savedRoute);
+//        return ResponseEntity.ok(responseDto);
+//    }
+
+    @PostMapping("/user/route-details") // 유저가 작성한 루트 저장
+    public ResponseEntity<RouteDto> saveRouteDetails(@Valid @RequestBody RouteDto routeDto, BindingResult result, Authentication authentication) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User user = (User) authentication.getPrincipal();
+
+        Route route = routeDto.toEntity();
+        route.setUser(user);
+
+        user.addRoute(route);
+        userService.save(user);
+
+        RouteDto savedRouteDto = new RouteDto(route);
+        return ResponseEntity.ok(savedRouteDto);
+    }
+
     @GetMapping("/user/routes") //유저테이블에 있는 routeInfo 가져오기 (루트가져오기 버튼)
     public ResponseEntity<List<String>> getRoutes(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        List<String> routeInfo = userService.getRouteInfo(user);
+        List<Route> routes = user.getRoutes();
+        List<String> routeInfo = routes.stream()
+                .map(Route::getRouteInfo)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(routeInfo);
     }
+
 
     @GetMapping("/Allroutes") // 모든 루트추천 불러오기
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
@@ -94,11 +101,11 @@ public class RouteController {
         List<Route> routes = routeRepository.findAll();
 
         // RouteDto 리스트로 변환하여 반환
-        List<RouteDto> routeDtos = routes.stream()
-                .map(route -> new RouteDto(route.getTitle(), route.getDepartment(), route.getDate(), route.getRecommendation()))
+        List<RouteDto> routeDto = routes.stream()
+                .map(RouteDto::new)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(routeDtos);
+        return ResponseEntity.ok(routeDto);
     }
 
     @GetMapping("/route/recommend") // 로그인 한 유저가 작성한 루트추천
@@ -107,14 +114,14 @@ public class RouteController {
         User user = (User) authentication.getPrincipal();
 
         // 현재 사용자가 작성한 Route 엔티티 조회
-        List<Route> routes = routeRepository.findByUser(user);
+        List<Route> route = routeRepository.findByUser(user);
 
         // RouteDto 리스트로 변환하여 반환
-        List<RouteDto> routeDtos = routes.stream()
-                .map(route -> new RouteDto(route.getTitle(), route.getDepartment(), route.getDate(), route.getRecommendation()))
+        List<RouteDto> routeDto = route.stream()
+                .map(RouteDto::new)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(routeDtos);
+        return ResponseEntity.ok(routeDto);
     }
 
     @GetMapping("/route/{department}") // 전공별 루트평 출력
