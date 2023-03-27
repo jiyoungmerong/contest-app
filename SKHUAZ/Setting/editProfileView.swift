@@ -1,13 +1,15 @@
-import SwiftUI
+//
+//  editProfileView.swift
+//  pbch
+//
+//  Created by 문인호 on 2023/03/13.
+//
 
-struct SignUpView: View {
+import SwiftUI
+struct editProfileView: View {
     @State private var Name: String = "" // 이름
     @State private var Nickname: String = "" // 닉네임
-    @State private var Student_id: String = "" // 학번
-    @State private var Password: String = "" // 비밀번호
-    @State private var RepeatedPassword: String = ""
     @State private var Semester: Int = 0 // 학기
-    @State private var passwordError = ""
     
     
     @State private var Graduate: Bool = false // 졸업여부
@@ -20,14 +22,13 @@ struct SignUpView: View {
     var body: some View {
         Group{
             VStack(){
-                TextInputView(
+                TextInput(
                     Name: self.$Name,
                     Nickname: self.$Nickname,
-                    Student_id: self.$Student_id,
-                    Password: self.$Password,
-                    RepeatedPassword: self.$RepeatedPassword,
-                    passwordError: self.$passwordError,
                     Semester: self.$Semester,
+                    //                )
+                    
+                    //                SelectView(
                     Graduate: self.$Graduate,
                     Department: self.$Department,
                     Major_minor: self.$Major_minor,
@@ -40,28 +41,18 @@ struct SignUpView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-struct SignUp_Previews: PreviewProvider {
+struct editProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        SignUpView()
+        editProfileView()
     }
 }
 
-struct TextInputView: View {
-    func checkEmail(str: String) -> Bool {
-        let emailRegex = "[A-Z0-9a-z._%+-]+@office.skhu.ac.kr"
-        return  NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: str)
-    }
-    
+struct TextInput: View {
     @Binding var Name: String
     @Binding var Nickname: String
-    @Binding var Student_id: String
-    @Binding var Password: String
-    @Binding var RepeatedPassword: String
-    @Binding var passwordError: String
     @Binding var Semester: Int
     
     @State var SemesterMessage: String = "재학중인 학기를 선택하시오"
-    @State var CheckMessage: String = "ex) abc123@office.skhu.ac.kr"
     @State var ShowModel: Bool = false
     @State var certification: Bool = false
     
@@ -87,166 +78,44 @@ struct TextInputView: View {
     @Binding var Major2: String
     @State var MarjorError: String = "선택한 두 전공이 같습니다"
     
-    struct ModalView: View {
-        @State private var test: String = ""
-        @Environment(\.presentationMode) var presentatio
-        
-        var body: some View {
-            Group{
-                VStack{
-                    HStack{
-                        Text("인증번호를 입력해주세요")
-                            .foregroundColor(.black)
-                        Spacer()
-                    }
-                    .padding(.leading, 30)
-                    VStack(spacing: 0){
-                        TextField("인증번호 입력", text: $test)
-                            .frame(width: 350, height: 50)
-                            .textFieldStyle(.roundedBorder)
-                        HStack{
-                            Button(action: {
-                                // 인증번호 재전송하는 기능
-                            }, label: {
-                                Image(systemName: "arrow.clockwise")
-                                Text("인증코드 재전송")
-                            })
-                            .foregroundColor(.gray)
-                            Spacer()
-                        }
-                        .padding(.leading, 30)
-                        
-                    }
-                    HStack{
-                        Button(action: {
-                            presentatio.wrappedValue.dismiss()
-                        }) {
-                            Text("취소").bold()
-                        }
-                        .foregroundColor(.gray)
-                        .frame(width: 170, height: 50)
-                        .background(Color(uiColor: .secondarySystemBackground))
-                        .cornerRadius(10)
-                        Button(action: {
-                            // 인증번호 확인
-                        }) {
-                            Text("확인").bold()
-                        }
-                        .foregroundColor(.white)
-                        .frame(width: 170, height: 50)
-                        .background(Color(red: 0.603, green: 0.756, blue: 0.819))
-                        .cornerRadius(10)
-                    }
-                }
-                
-            }
+    struct SecondSignView: View{ // 학기 선택 부터 뷰
+        var body: some View{
+            Text("")
         }
     }
     
     var body: some View {
-        ScrollView{
-            Spacer()
-                .padding(30)
-            TextField("이름을 입력해주세요* ", text: $Name)
-                .padding()
-                .frame(width: 350, height: 50)
-                .background(Color(uiColor: .secondarySystemBackground))
-                .cornerRadius(10)
-            HStack{
-                TextField("닉네임을 입력해주세요* ", text: $Nickname)
-                    .padding()
-                    .frame(width: 250, height: 50)
-                    .background(Color(uiColor: .secondarySystemBackground))
-                    .cornerRadius(10)
-                Button{} label: {
-                    Text("중복확인")
-                        .foregroundColor(Color(red: 0.76, green: 0.552, blue: 0.552))
-                        .frame(width: 90, height:50)
-                        .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color(red: 0.76, green: 0.552, blue: 0.552)))
-                }
-            } // 닉네임 입력 HStack
-            .padding(30)
             VStack{
-                HStack{
-                    TextField("학교이메일을 입력해주세요* ", text: $Student_id)
-                        .padding()
-                        .frame(width: 250, height: 50)
-                        .background(Color(uiColor: .secondarySystemBackground))
-                        .cornerRadius(10)
-                        .keyboardType(.decimalPad)
-                    Button{
-                        if checkEmail(str: Student_id){
-                            CheckMessage = ""
-                            self.ShowModel = true
-                        }
-                        else{
-                            CheckMessage = "학교 이메일을 입력해주세요"
-                        }
-                    } label: {
-                        Text("인증번호 발송")
-                            .foregroundColor(Color(red: 0.76, green: 0.552, blue: 0.552))
-                            .frame(width: 90, height:50)
-                            .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color(red: 0.76, green: 0.552, blue: 0.552)))
-                            .sheet(isPresented: self.$ShowModel) {
-                                ModalView()
-                            }
-                        
-                    }
+                ZStack{
+                    Circle()
+                        .fill(Color(hex: 0xEFEFEF))
+                        .frame(width: 150, height: 150)
+                    Text("프로필 사진")
+                        .foregroundColor(Color(hex: 0x7D7D7D))
                 }
-                HStack{
-                    Text("\(CheckMessage)")
-                        .padding(.leading, 30)
-                        .font(.system(size: 14))
-                        .foregroundColor(.gray)
-                        .lineLimit(2)
-                    Spacer()
-                }
-                
-            }
-            .padding(.bottom, 16)// 학번 중복확인 HStack
-            VStack(spacing: 15){ // 비밀번호 입력 받는 SecureField
-                SecureField("비밀번호를 입력해주세요 *", text: $Password)
+                .padding(.bottom, 15)
+                TextField("이름을 입력해주세요* ", text: $Name)
                     .padding()
                     .frame(width: 350, height: 50)
                     .background(Color(uiColor: .secondarySystemBackground))
                     .cornerRadius(10)
-                    .onChange(of: Password) { V in
-                        if (Password == RepeatedPassword) {
-                            passwordError = ""
-                        }
-                        else {
-                            passwordError = "비밀번호가 일치하지 않습니다."
-                        }
-                    }
-                    .padding(.bottom, 30)// 학번 중복확인 HStack
-                
-                VStack(spacing: 5){ // 비밀번호 입력 확인 안내문구와 SecureField
-                    SecureField("비밀번호를 한번 더 입력해주세요*", text: $RepeatedPassword)
+                HStack{
+                    TextField("닉네임을 입력해주세요* ", text: $Nickname)
                         .padding()
-                        .frame(width: 350, height: 50)
+                        .frame(width: 250, height: 50)
                         .background(Color(uiColor: .secondarySystemBackground))
                         .cornerRadius(10)
-                        .onChange(of: RepeatedPassword) { V in
-                            if (Password == RepeatedPassword) {
-                                passwordError = ""
-                            }
-                            else {
-                                passwordError = "비밀번호가 일치하지 않습니다."
-                            }
-                        }
-                    HStack{ // 비밀번호 안내문구 출력
-                        Text(passwordError)
-                            .padding(.leading, 30)
-                            .font(.system(size: 14))
-                            .foregroundColor(.red)
-                        Spacer() // 문구 왼쪽 정렬을 위함
+                    Button{} label: {
+                        Text("중복확인")
+                            .foregroundColor(Color(red: 0.76, green: 0.552, blue: 0.552))
+                            .frame(width: 90, height:50)
+                            .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color(red: 0.76, green: 0.552, blue: 0.552)))
                     }
-                } // 비밀번호 입력 확인 Field
-            } // 비밀번호 입력 받는 Field
-            .padding(.bottom, 30)// 학번 중복확인 HStack
-            
+                } // 닉네임 입력 HStack
+                .padding(30)
+            }
             HStack(spacing: 30){
-                Text("학기 선택")
+                Text("학기 입력 * ")
                     .font(.system(size: 14))
                 Group{
                     Menu {
@@ -316,7 +185,7 @@ struct TextInputView: View {
             
             VStack(spacing: 1){ // 졸업유무 전공유형 스텍
                 HStack(spacing: 30){
-                    Text("졸업유무*")
+                    Text("졸업유무 *")
                         .font(.system(size: 14))
                     HStack(spacing: 30){
                         Button(action: {
@@ -567,17 +436,13 @@ struct TextInputView: View {
                 }
             }
             .padding(.bottom, 30)
-            Spacer()
-            Text("회원가입")
+            Text("저장")
                 .frame(width: 330, height: 10)
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding()
                 .background(Color(red: 0.603, green: 0.756, blue: 0.819))
                 .cornerRadius(10)
+        Text("")
         }//VStack 종료 부분
-        .padding(.trailing, 30)
-        .padding(.leading, 30)
-    }
 }
-
