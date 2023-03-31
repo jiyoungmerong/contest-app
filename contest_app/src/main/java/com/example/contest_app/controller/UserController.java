@@ -12,6 +12,7 @@ import com.example.contest_app.repository.UserRepository;
 import com.example.contest_app.service.EncryptionService;
 import com.example.contest_app.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,8 +20,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -35,10 +39,17 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping("/users/new-user") // 회원가입
-    public ResponseEntity<String> join(@RequestBody UserDto userDto) {
-        userService.save(userDto);
-        return ResponseEntity.ok("Join success"); // 메시지 명시
+    public ResponseEntity<String> join(@Valid @RequestBody UserDto userDto) { // @Valid 어노테이션 추가
+        try {
+            userService.save(userDto);
+            return ResponseEntity.ok("Join success"); // 메시지 명시
+        } catch (DuplicateKeyException e) { // 중복된 이메일인 경우
+            return ResponseEntity.badRequest().body("Join failed: Email already exists");
+        } catch (Exception e) { // 그 외의 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Join failed: " + e.getMessage());
+        }
     }
+
 
     @PostMapping("/users/login") // 로그인
     public ResponseEntity<String> login(@RequestBody loginRequest request, HttpSession httpSession) {
@@ -73,28 +84,35 @@ public class UserController {
 
 
     @DeleteMapping("/delete") // 회원탈퇴
-    public ResponseEntity<String> deleteUser(@RequestBody DeleteRequest deleteRequest, Authentication authentication) {
+    public ResponseEntity<String> deleteUser(@Valid @RequestBody DeleteRequest deleteRequest, Authentication authentication) {
         User currentUser = (User) authentication.getPrincipal();
         int currentUserId = currentUser.getId();
 
         String password = deleteRequest.getPassword();
-        if (password == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호를 입력해주세요.");
+
+        if (password == null || password.isEmpty()) {
+            return ResponseEntity.badRequest().body("비밀번호를 입력해주세요.");
         }
 
         try {
             String encryptedPassword = encryptionService.encrypt(password); // 비밀번호 암호화
             userService.deleteUser(currentUserId, encryptedPassword);
             return ResponseEntity.ok("사용자가 성공적으로 삭제되었습니다.");
-        } catch (UserNotFoundException | InvalidPasswordException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("해당 사용자를 찾을 수 없습니다.");
+        } catch (InvalidPasswordException e) {
+            return ResponseEntity.badRequest().body("잘못된 비밀번호입니다.");
         } catch (EncryptionException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 암호화에 실패했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("알 수 없는 오류가 발생했습니다.");
         }
     }
 
+    // 쿠키를 사용하여 새로운 세션 ID를 클라이언트에게 전달.
+    // 클라이언트는 이 새로운 세션 ID를 이용하여 새로운 세션을 시작할 수 있음
     @PostMapping("/logout") // 로그아웃
-    public ResponseEntity<LogoutResponse> logout(HttpServletRequest request) {
+    public ResponseEntity<LogoutResponse> logout(HttpServletRequest request, HttpServletResponse response) {
         // 현재 세션 무효화
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -104,11 +122,15 @@ public class UserController {
         HttpSession newSession = request.getSession(true);
         // 새로운 세션 ID 얻기
         String newSessionId = newSession.getId();
+        // 클라이언트에게 전달할 새로운 세션 ID를 쿠키에 저장
+        Cookie cookie = new Cookie("JSESSIONID", newSessionId);
+        cookie.setPath("/");
+        cookie.setMaxAge(-1); // 브라우저를 닫을 때 쿠키 삭제
+        response.addCookie(cookie);
         // 로그아웃 메시지와 새로운 세션 ID 전송
-        LogoutResponse response = new LogoutResponse("로그아웃 되었습니다.", newSessionId);
-        return ResponseEntity.ok(response);
+        LogoutResponse logoutResponse = new LogoutResponse("로그아웃 되었습니다.", newSessionId);
+        return ResponseEntity.ok(logoutResponse);
     }
-
     @GetMapping("/user-profile") // 사용자 정보 가져오기
     @ResponseBody
     public ResponseEntity<UserDto> getMyProfile() {
@@ -117,10 +139,11 @@ public class UserController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String email = auth.getName();
             Optional<User> user = userRepository.findByEmail(email);
+            UserDto userdto = UserDto.convertToDto(Optional.ofNullable(user.orElseThrow(() -> new Exception("User not found"))));
 
             // 사용자 정보를 UserDto로 변환하여 전송
-            UserDto userDto = UserDto.convertToDto(user);
-            return ResponseEntity.ok(userDto);
+            UserDto u = UserDto.convertToDto(user);
+            return ResponseEntity.ok(u);
         } catch (Exception e) {
             // 예외 발생 시 500에러 응답 코드 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -154,12 +177,13 @@ public class UserController {
             userRepository.save(user);
 
             // User 객체를 UserDto로 변환하여 전송
-            UserDto updatedUserDto = UserDto.convertToDto(optionalUser);
+            UserDto updatedUserDto = UserDto.convertToDto(Optional.ofNullable(user));
             return ResponseEntity.ok(updatedUserDto);
         } catch (Exception e) {
             // 예외 발생 시 500에러 응답 코드 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 
 }

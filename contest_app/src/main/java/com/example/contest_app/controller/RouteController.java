@@ -3,6 +3,7 @@ package com.example.contest_app.controller;
 import com.example.contest_app.domain.Route;
 import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.RouteDto;
+import com.example.contest_app.domain.request.RouteInfoRequest;
 import com.example.contest_app.repository.RouteRepository;
 
 import com.example.contest_app.service.RouteService;
@@ -11,16 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,12 +31,12 @@ public class RouteController {
     private final RouteService routeService;
     private final RouteRepository routeRepository;
 
-    @PostMapping("/save-route-info") // 선수과목제도에서 작성한 루트 저장버튼.
-    public ResponseEntity<String> saveRouteInfo(@RequestParam("routeInfo") String routeInfo, Authentication authentication) {
+    @PostMapping("/save-route-info") // 사용자가 작성한 루트 저장
+    public ResponseEntity<String> saveRouteInfo(@RequestBody RouteInfoRequest request, Authentication authentication) {
         try {
             User user = (User) authentication.getPrincipal();
 
-            user.setRouteInfo(routeInfo);
+            user.setRouteInfo(request.getRouteInfo());
             userService.save(user);
 
             return ResponseEntity.ok("Route info saved successfully.");
@@ -66,7 +65,7 @@ public class RouteController {
 //        return ResponseEntity.ok(responseDto);
 //    }
 
-    @PostMapping("/user/route-details") // 유저가 작성한 루트 저장
+    @PostMapping("/user/route-details") // 유저가 작성한 루트 글 가져오기
     public ResponseEntity<RouteDto> saveRouteDetails(@Valid @RequestBody RouteDto routeDto, BindingResult result, Authentication authentication) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().build();
@@ -76,8 +75,8 @@ public class RouteController {
 
         Route route = routeDto.toEntity();
         route.setUser(user);
-
         user.addRoute(route);
+
         userService.save(user);
 
         RouteDto savedRouteDto = new RouteDto(route);
@@ -94,18 +93,19 @@ public class RouteController {
         return ResponseEntity.ok(routeInfo);
     }
 
+    @GetMapping("/Allroutes")
+    public ResponseEntity<Page<RouteDto>> findAllRoutes(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                        @RequestParam(value = "size", defaultValue = "10") int size) {
+        // 페이지 요청 정보 생성
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
-    @GetMapping("/Allroutes") // 모든 루트추천 불러오기
-    public ResponseEntity<List<RouteDto>> findAllRoutes() {
-        // 모든 Route 엔티티 조회
-        List<Route> routes = routeRepository.findAll();
+        // Route 엔티티 페이지 조회
+        Page<Route> routePage = routeRepository.findAll(pageable);
 
-        // RouteDto 리스트로 변환하여 반환
-        List<RouteDto> routeDto = routes.stream()
-                .map(RouteDto::new)
-                .collect(Collectors.toList());
+        // RouteDto 페이지로 변환하여 반환
+        Page<RouteDto> routeDtoPage = routePage.map(RouteDto::new);
 
-        return ResponseEntity.ok(routeDto);
+        return ResponseEntity.ok(routeDtoPage);
     }
 
     @GetMapping("/route/recommend") // 로그인 한 유저가 작성한 루트추천

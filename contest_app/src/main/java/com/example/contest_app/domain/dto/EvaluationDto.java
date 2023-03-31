@@ -1,10 +1,15 @@
 package com.example.contest_app.domain.dto;
 
+import com.example.contest_app.domain.Evaluation;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EvaluationDto {
 
     private String lecture; // 강의명
@@ -30,4 +35,24 @@ public class EvaluationDto {
     private String review; // 총평
 
     private int total_star; // 총 점수
+
+//    public static EvaluationDto convertToDto(Evaluation evaluation) {
+//        String prfsName = (evaluation.getPrfs() != null) ? evaluation.getPrfs().getName() : null;
+//        return new EvaluationDto(
+//                evaluation.getId(),
+//                evaluation.getLecture(),
+//                prfsName,
+//                evaluation.isMajorRequired(),
+//                evaluation.getDepartment(),
+//                evaluation.getClassYear(),
+//                evaluation.getSemester(),
+//                evaluation.getTeamPlay(),
+//                evaluation.getTask(),
+//                evaluation.getPractice(),
+//                evaluation.getPresentation(),
+//                evaluation.getReview(),
+//                evaluation.getTotalStar()
+//        );
+//    }
+
 }

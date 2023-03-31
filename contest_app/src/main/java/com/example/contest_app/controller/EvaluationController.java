@@ -2,9 +2,11 @@ package com.example.contest_app.controller;
 
 import com.example.contest_app.domain.Evaluation;
 import com.example.contest_app.domain.Lecture;
+import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.EvaluationDto;
 import com.example.contest_app.repository.EvaluationRepository;
 import com.example.contest_app.repository.LectureRepository;
+import com.example.contest_app.repository.UserRepository;
 import com.example.contest_app.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +36,8 @@ public class EvaluationController {
 
     private final LectureRepository lectureRepository;
 
+    private final UserRepository userRepository;
+
     @GetMapping("/posts") // 게시글 불러오기
     public ResponseEntity<Page<Evaluation>> getPosts(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Page<Evaluation> evaluationPage = evaluationRepository.findAll(pageable);
@@ -40,7 +45,7 @@ public class EvaluationController {
     }
 
     @PostMapping("/save") // + 버튼 눌렀을 때 게시글 저장
-    public ResponseEntity<String> createEvaluation(@RequestBody EvaluationDto evaluationDto, HttpServletRequest request, Authentication authentication){
+    public ResponseEntity<String> createEvaluation(@RequestBody EvaluationDto evaluationDto, HttpServletRequest request, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             // 로그인되어 있지 않은 경우, 로그인 페이지로 이동하도록 리다이렉트
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("로그인이 필요합니다.");
@@ -50,8 +55,11 @@ public class EvaluationController {
             return ResponseEntity.ok("게시글 저장 성공");
         } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패: " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/posts/{id}") // 게시글 삭제
     public ResponseEntity<String> deletePosts(@PathVariable int id, HttpServletRequest request){
@@ -103,16 +111,41 @@ public class EvaluationController {
         return ResponseEntity.ok("강의평가가 수정되었습니다.");
     }
 
-    @GetMapping("/department/{department}") // 전공별로 검색
-    public ResponseEntity<Page<Evaluation>> findByDepartmentContaining(
-            @PathVariable String department,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Evaluation> evaluations = evaluationService.findByDepartmentContaining(department, pageable);
-        return ResponseEntity.ok(evaluations);
-    }
+//    @GetMapping("/my-posts")
+//    public ResponseEntity<List<EvaluationDto>> getMyPosts(Authentication authentication) {
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
+//
+//        String email = authentication.getName();
+//        List<Evaluation> evaluations = evaluationRepository.findByUserEmail(email);
+//
+//        List<EvaluationDto> evaluationDtos = new ArrayList<>();
+//        for (Evaluation evaluation : evaluations) {
+//            EvaluationDto dto = new EvaluationDto();
+//            dto.setId(evaluation.getId());
+//            dto.setProfessor(evaluation.getProfessor());
+//            dto.setCourse(evaluation.getCourse());
+//            dto.setSemester(evaluation.getSemester());
+//            dto.setYear(evaluation.getYear());
+//            dto.setContent(evaluation.getContent());
+//            dto.setCreatedAt(evaluation.getCreatedAt());
+//            evaluationDtos.add(dto);
+//        }
+//
+//        return ResponseEntity.ok(evaluationDtos);
+//    }
 
+//    @GetMapping("/department/{department}") // 전공별로 검색
+//    public ResponseEntity<Page<EvaluationDto>> findByDepartmentContaining(
+//            @PathVariable String department,
+//            @RequestParam(value = "page", defaultValue = "0") int page,
+//            @RequestParam(value = "size", defaultValue = "10") int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Evaluation> evaluations = evaluationService.findByDepartmentContaining(department, pageable);
+//        Page<EvaluationDto> evaluationDtos = evaluations.map(EvaluationDto::convertToDto);
+//        return ResponseEntity.ok(evaluationDtos);
+//    }
     @GetMapping("evaluation/{name}") // 강의평 제목으로 검색
     public ResponseEntity<Page<Evaluation>> searchReviews(@PathVariable String name,
                                                           @RequestParam(value = "page", defaultValue = "0") int page,

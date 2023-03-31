@@ -39,9 +39,6 @@ public class Evaluation {
 
     private int total_star; // 총 점수
 
-//    private int like = 0; //추천 수
-//
-//    private int dislike = 0; //비추천 수
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id")
