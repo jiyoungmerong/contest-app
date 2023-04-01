@@ -34,12 +34,12 @@ public class UserService {
 
 
     public void save(UserDto userDto) {
-        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword()); // 패스워드 인코딩
         userDto.setPassword(encodedPassword);
 
         User user = new User();
         user.setEmail(userDto.getEmail());
-        user.setPassword(encodedPassword);
+        user.setPassword(encodedPassword); // 인코딩된 패스워드 저장
         user.setNickname(userDto.getNickname());
         user.setSemester(userDto.getSemester());
         user.setGraduate(userDto.isGraduate());
@@ -78,20 +78,6 @@ public class UserService {
         }
         return Collections.emptyList();
     }
-
-
-//
-//
-//    public TokenDto login(String email, String password) {
-//
-//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-//
-//        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-//
-//        TokenDto tokenDTO = tokenProvider.createToken(authentication);
-//
-//        return tokenDTO;
-//    }
 
     public boolean isCorrectPassword(int user_id, String password){ // 탈퇴시 비밀번호 확인
         User user = userRepository.findById(user_id).orElse(null);
