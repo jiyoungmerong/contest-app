@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +51,6 @@ public class UserController {
         }
     }
 
-
     @PostMapping("/users/login") // 로그인
     public ResponseEntity<String> login(@RequestBody loginRequest request, HttpSession httpSession) {
         User user = userService.findByEmail(request.getEmail());
@@ -64,6 +64,7 @@ public class UserController {
         httpSession.setAttribute("user", user); // 세션에 로그인 정보 유지
         return ResponseEntity.ok("Login success");
     }
+
 
     @PostMapping("/check-login") // 회원정보수정창 로그인
     public ResponseEntity<String> checkLogin(@RequestBody loginRequest request) {

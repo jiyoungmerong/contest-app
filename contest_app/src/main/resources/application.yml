@@ -22,8 +22,10 @@ spring:
     init:
       mode: always
 jwt:
-  secret: secret-key
+  secret: ${JWT_SECRET_KEY}
   token-validity-in-milliseconds: 86400000
+
+
   mail:
     host: smtp.naver.com #smtp ?? ??
     port: 465 # ?? ???? ??

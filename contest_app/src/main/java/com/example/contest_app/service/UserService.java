@@ -1,7 +1,15 @@
 package com.example.contest_app.service;
 import com.example.contest_app.exception.InvalidPasswordException;
 import com.example.contest_app.exception.UserNotFoundException;
-import com.example.contest_app.repository.EvaluationRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +31,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EvaluationRepository evaluationRepository;
-    // private String authKey;
 
-//    public void save(UserDto userDto){
-//        userDto.setPassword(passwordEncoder.encode(userDto.getPassword());
-//        userRepository.save(userDto.toEntity());
-//    }
 
     public void save(UserDto userDto) {
-        String encodedPassword = passwordEncoder.encode(userDto.getPassword()); // 패스워드 인코딩
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(encodedPassword);
 
         User user = new User();
         user.setEmail(userDto.getEmail());
-        user.setPassword(encodedPassword); // 인코딩된 패스워드 저장
+        user.setPassword(encodedPassword);
         user.setNickname(userDto.getNickname());
         user.setSemester(userDto.getSemester());
         user.setGraduate(userDto.isGraduate());
@@ -51,6 +53,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+
     public void save(User user) {
         userRepository.save(user);
     }
@@ -60,6 +63,7 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다." + email));
     }
+
 
     public boolean checkDuplicateNickname(String username) {
         return userRepository.findByNickname(username).isPresent();
@@ -76,18 +80,18 @@ public class UserService {
     }
 
 
-
-
-    public String login(String email, String password) {
-
-        Optional<User> user = userRepository.findByEmail(email);
-
-        if(user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())){
-            return "true";
-        }
-        return "false";
-
-    }
+//
+//
+//    public TokenDto login(String email, String password) {
+//
+//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+//
+//        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
+//
+//        TokenDto tokenDTO = tokenProvider.createToken(authentication);
+//
+//        return tokenDTO;
+//    }
 
     public boolean isCorrectPassword(int user_id, String password){ // 탈퇴시 비밀번호 확인
         User user = userRepository.findById(user_id).orElse(null);
