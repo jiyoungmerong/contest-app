@@ -50,6 +50,8 @@ public class User implements UserDetails {
 
     private boolean isEmailVerified; // 이메일 인증 되었는지
 
+    private boolean isLogin;
+
     @Column(length = 1000)
     public String routeInfo; // 루트추천 저장
 

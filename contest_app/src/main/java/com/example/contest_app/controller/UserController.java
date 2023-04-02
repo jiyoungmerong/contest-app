@@ -1,9 +1,11 @@
 package com.example.contest_app.controller;
 
+import ch.qos.logback.core.boolex.Matcher;
 import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.UserDto;
 import com.example.contest_app.domain.request.DeleteRequest;
 import com.example.contest_app.domain.request.loginRequest;
+import com.example.contest_app.domain.response.LoginResponse;
 import com.example.contest_app.domain.response.LogoutResponse;
 import com.example.contest_app.exception.EncryptionException;
 import com.example.contest_app.exception.InvalidPasswordException;
@@ -17,10 +19,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -51,30 +54,40 @@ public class UserController {
     }
 
     @PostMapping("/users/login") // 로그인
-    public ResponseEntity<String> login(@RequestBody loginRequest request, HttpSession httpSession) {
+    public ResponseEntity<LoginResponse> login(@RequestBody loginRequest request, HttpSession httpSession) {
         User user = userService.findByEmail(request.getEmail());
         if (user == null) {
-            return ResponseEntity.badRequest().body("이메일과 비밀번호를 확인해주세요.");
+            return ResponseEntity.badRequest().body(null);
         }
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.badRequest().body("Incorrect password");
+            return ResponseEntity.badRequest().body(null);
         }
+
+        user.setLogin(true); // 로그인 상태 업데이트
+        userService.save(user); // 변경된 로그인 상태 저장
 
         httpSession.setAttribute("user", user); // 세션에 로그인 정보 유지
-        return ResponseEntity.ok("Login success");
+
+        // LoginResponse 객체 생성 및 리턴
+        LoginResponse loginResponse = new LoginResponse();
+
+        loginResponse.setNickname(user.getNickname());
+        loginResponse.setMajor1(user.getMajor1());
+        loginResponse.setMajor2(user.getMajor2());
+        loginResponse.setSemester(user.getSemester());
+        loginResponse.setDepartment(user.isDepartment());
+        loginResponse.setEmail(user.getEmail());
+        loginResponse.setPassword(user.getPassword());
+        loginResponse.setGraduate(user.isGraduate());
+        loginResponse.setMajor_minor(user.isMajor_minor());
+        loginResponse.setDouble_major(user.isDouble_major());
+        loginResponse.setLogin(user.isLogin());
+        loginResponse.setMessage("Login Success");
+
+        return ResponseEntity.ok(loginResponse);
+
     }
 
-    @PostMapping("/check-login") // 회원정보수정창 로그인
-    public ResponseEntity<String> checkLogin(@RequestBody loginRequest request) {
-        // 이메일과 비밀번호가 올바른지 확인
-        User user = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
-        if (user == null) {
-            // 오류 메시지 반환
-            return ResponseEntity.badRequest().body("이메일과 비밀번호를 확인해주세요.");
-        }
-        // 회원정보 수정 페이지로 이동
-        return ResponseEntity.ok().body("회원정보 수정 페이지로 이동합니다.");
-    }
 
     @GetMapping("/checkDuplicate/{nickname}") // 닉네임 중복 확인
     public boolean checkDuplicateNickname(@PathVariable String nickname) {
@@ -108,46 +121,40 @@ public class UserController {
         }
     }
 
-    // 쿠키를 사용하여 새로운 세션 ID를 클라이언트에게 전달.
-    // 클라이언트는 이 새로운 세션 ID를 이용하여 새로운 세션을 시작할 수 있음
+
     @PostMapping("/logout") // 로그아웃
     public ResponseEntity<LogoutResponse> logout(HttpServletRequest request, HttpServletResponse response) {
-        // 현재 세션 무효화
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate();
+            session.removeAttribute("user"); // 세션에서 로그인 정보 삭제
+            session.invalidate(); // 세션 무효화
         }
-        // 새로운 세션 생성
-        HttpSession newSession = request.getSession(true);
-        // 새로운 세션 ID 얻기
-        String newSessionId = newSession.getId();
-        // 클라이언트에게 전달할 새로운 세션 ID를 쿠키에 저장
-        Cookie cookie = new Cookie("JSESSIONID", newSessionId);
-        cookie.setPath("/");
-        cookie.setMaxAge(-1); // 브라우저를 닫을 때 쿠키 삭제
-        response.addCookie(cookie);
-        // 로그아웃 메시지와 새로운 세션 ID 전송
-        LogoutResponse logoutResponse = new LogoutResponse("로그아웃 되었습니다.", newSessionId);
+
+        LogoutResponse logoutResponse = new LogoutResponse("로그아웃 되었습니다.");
+
         return ResponseEntity.ok(logoutResponse);
     }
-    @GetMapping("/user-profile") // 사용자 정보 가져오기
-    @ResponseBody
-    public ResponseEntity<UserDto> getMyProfile() {
-        try {
-            // 현재 로그인된 사용자의 정보 불러오기
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = auth.getName();
-            Optional<User> user = userRepository.findByEmail(email);
-            UserDto userdto = UserDto.convertToDto(Optional.ofNullable(user.orElseThrow(() -> new Exception("User not found"))));
 
-            // 사용자 정보를 UserDto로 변환하여 전송
-            UserDto u = UserDto.convertToDto(user);
-            return ResponseEntity.ok(u);
-        } catch (Exception e) {
-            // 예외 발생 시 500에러 응답 코드 반환
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    @GetMapping("/check-login")
+    public ResponseEntity<String> checkLogin(@RequestBody loginRequest request) {
+        // 이메일과 비밀번호가 올바른지 확인
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if (!user.isPresent()) {
+            // 오류 메시지 반환
+            return ResponseEntity.badRequest().body("이메일과 비밀번호를 확인해주세요.");
         }
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(request.getPassword(), user.get().getPassword())) {
+            // 오류 메시지 반환
+            return ResponseEntity.badRequest().body("이메일과 비밀번호를 확인해주세요.");
+        }
+
+        // 회원정보 수정 페이지로 이동
+        return ResponseEntity.ok().body("회원정보 수정 페이지로 이동합니다.");
     }
+
+
 
     @PutMapping("/user-profile") // 유저 정보 수정
     @ResponseBody
