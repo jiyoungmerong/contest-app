@@ -37,7 +37,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(userDto.getPassword()); // 패스워드 인코딩
         userDto.setPassword(encodedPassword);
 
-        User user = new User();
+        User user = new User(); 
         user.setEmail(userDto.getEmail());
         user.setPassword(encodedPassword); // 인코딩된 패스워드 저장
         user.setNickname(userDto.getNickname());
@@ -48,7 +48,6 @@ public class UserService {
         user.setDepartment(userDto.isDepartment());
         user.setMajor_minor(userDto.isMajor_minor());
         user.setDouble_major(userDto.isDouble_major());
-        user.setRouteInfo(userDto.getRouteInfo());
 
         userRepository.save(user);
     }

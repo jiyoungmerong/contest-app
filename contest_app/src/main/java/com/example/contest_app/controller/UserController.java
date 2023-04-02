@@ -64,7 +64,6 @@ public class UserController {
         return ResponseEntity.ok("Login success");
     }
 
-
     @PostMapping("/check-login") // 회원정보수정창 로그인
     public ResponseEntity<String> checkLogin(@RequestBody loginRequest request) {
         // 이메일과 비밀번호가 올바른지 확인
