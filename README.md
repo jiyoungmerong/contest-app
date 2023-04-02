@@ -13,6 +13,10 @@
 - 2023년도 1학기부터 시작되는 선수과목필수제도가 낯설 기존의 전공생들과 전공희망자들의 혼란을 최소화하고자 서비스를 기획하게 되었습니다.
 <br>
 
+**✏️화면설계서**
+[화면설계서](https://docs.google.com/presentation/d/1f86pxXAtCNb8E4Bpo681xuob3U1AWsLLQ97n2B2JbrI/edit?usp=sharing)
+<br>
+
 **✏️타켓층**
 - 성공회대학교 IT융합자율학부 소속 학우들
 <br>
@@ -34,6 +38,10 @@
 **✏️주요 기술**
 - (Develop)
 - (Deploy)
+<br>
+
+**✏️API LIST**
+[API LIST](https://docs.google.com/spreadsheets/d/1ZoWnLDblq2aaDzvEbMTEwCx34HS-Qy0fzOm_4k4j9wo/edit?usp=sharing)
 <br>
 
 **✏️FlowChart**
