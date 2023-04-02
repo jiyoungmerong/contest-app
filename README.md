@@ -14,7 +14,7 @@
 <br>
 
 **✏️화면설계서**
-- [(Google Slides)화면설계서](https://docs.google.com/presentation/d/1f86pxXAtCNb8E4Bpo681xuob3U1AWsLLQ97n2B2JbrI/edit?usp=sharing)
+- [(Google Slides) 화면설계서](https://docs.google.com/presentation/d/1f86pxXAtCNb8E4Bpo681xuob3U1AWsLLQ97n2B2JbrI/edit?usp=sharing)
 <br>
 
 **✏️타켓층**
@@ -41,7 +41,7 @@
 <br>
 
 **✏️API LIST**
-- [(Google Sheet)API LIST](https://docs.google.com/spreadsheets/d/1ZoWnLDblq2aaDzvEbMTEwCx34HS-Qy0fzOm_4k4j9wo/edit?usp=sharing)
+- [(Google Sheet) API LIST](https://docs.google.com/spreadsheets/d/1ZoWnLDblq2aaDzvEbMTEwCx34HS-Qy0fzOm_4k4j9wo/edit?usp=sharing)
 <br>
 
 **✏️FlowChart**
