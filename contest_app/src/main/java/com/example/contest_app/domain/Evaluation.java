@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Evaluation")
+@Table(name = "evaluaion")
 public class Evaluation {
 
     @Id
@@ -38,7 +38,6 @@ public class Evaluation {
     private String review; // 총평
 
     private int total_star; // 총 점수
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id")

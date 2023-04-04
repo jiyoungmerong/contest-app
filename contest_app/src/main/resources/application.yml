@@ -10,7 +10,7 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     open-in-view: false
     properties:
@@ -21,7 +21,6 @@ spring:
   sql:
     init:
       mode: always
-
 
   mail:
     host: smtp.naver.com #smtp ?? ??
