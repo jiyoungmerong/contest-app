@@ -55,9 +55,8 @@ public class RouteController {
         }
     }
 
-
     @PostMapping("/save/route") // 루트 저장 버튼
-    public ResponseEntity<?> createRoute(@Valid @RequestBody RouteDto routeDto, BindingResult result, Authentication authentication) {
+    public ResponseEntity<?> createRoute(@Valid @RequestBody RouteDto routeDto, BindingResult result, HttpSession httpSession) {
         if (result.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
             for (FieldError error : result.getFieldErrors()) {
@@ -66,40 +65,20 @@ public class RouteController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        User user = (User) authentication.getPrincipal();
+        User user = (User) httpSession.getAttribute("user");
 
         Route route = routeDto.toEntity();
         route.setUser(user);
+        route.setUserNickname(user.getNickname()); // 사용자의 닉네임 저장
         Route savedRoute = routeRepository.save(route);
 
         RouteDto responseDto = new RouteDto(savedRoute);
         return ResponseEntity.ok(responseDto);
     }
 
-
-
-
-@PostMapping("/user/route-details") // 유저가 작성한 루트 글 저장
-    public ResponseEntity<RouteDto> saveRouteDetails(@Valid @RequestBody RouteDto routeDto, BindingResult result, Authentication authentication) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        User user = (User) authentication.getPrincipal();
-
-        Route route = routeDto.toEntity();
-        route.setUser(user);
-        user.addRoute(route);
-
-        userService.save(user);
-
-        RouteDto savedRouteDto = new RouteDto(route);
-        return ResponseEntity.ok(savedRouteDto);
-    }
-
     @GetMapping("/user/routes") //유저테이블에 있는 routeInfo 가져오기 (루트가져오기 버튼)
-    public ResponseEntity<List<String>> getRoutes(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+    public ResponseEntity<List<String>> getRoutes(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
         List<Route> routes = user.getRoutes();
         List<String> routeInfo = routes.stream()
                 .map(Route::getRouteInfo)
@@ -107,7 +86,8 @@ public class RouteController {
         return ResponseEntity.ok(routeInfo);
     }
 
-    @GetMapping("/Allroutes")
+
+    @GetMapping("/Allroutes") // 모든 루트 가져오기
     public ResponseEntity<Page<RouteDto>> findAllRoutes(@RequestParam(value = "page", defaultValue = "0") int page,
                                                         @RequestParam(value = "size", defaultValue = "10") int size) {
         // 페이지 요청 정보 생성
@@ -123,9 +103,9 @@ public class RouteController {
     }
 
     @GetMapping("/route/recommend") // 로그인 한 유저가 작성한 루트추천
-    public ResponseEntity<List<RouteDto>> findAllRoutes(Authentication authentication) {
-        // 현재 로그인되어 있는 사용자의 정보를 가져오기
-        User user = (User) authentication.getPrincipal();
+    public ResponseEntity<List<RouteDto>> findAllRoutes(HttpSession session) {
+        // 세션에서 로그인 정보 가져오기
+        User user = (User) session.getAttribute("user");
 
         // 현재 사용자가 작성한 Route 엔티티 조회
         List<Route> route = routeRepository.findByUser(user);

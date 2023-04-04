@@ -25,7 +25,7 @@ public class EmailController {
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping("/verify/{code}") // 이메일 인증하기 버튼
+    @GetMapping("/verify/{code}") // 이메일 인증하기 버튼
     public ResponseEntity<Map<String, Object>> verifyEmail(@PathVariable("code") String code, HttpSession session) {
         Map<String, Object> resultMap = new HashMap<>();
         session.setMaxInactiveInterval(30 * 60);
@@ -41,6 +41,7 @@ public class EmailController {
             return ResponseEntity.ok(resultMap);
         }
     }
+
 
 
 }

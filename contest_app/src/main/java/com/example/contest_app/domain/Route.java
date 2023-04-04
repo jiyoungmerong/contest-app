@@ -27,6 +27,8 @@ public class Route {
 
     private LocalDateTime date; // 등록 시간
 
+    private String userNickname;
+
     private String routeInfo; // 루트 정보
 
     private String recommendation; // 루트 추천

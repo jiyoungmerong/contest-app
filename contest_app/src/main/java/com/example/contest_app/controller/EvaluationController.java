@@ -2,7 +2,6 @@ package com.example.contest_app.controller;
 
 import com.example.contest_app.domain.Evaluation;
 import com.example.contest_app.domain.Lecture;
-import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.EvaluationDto;
 import com.example.contest_app.repository.EvaluationRepository;
 import com.example.contest_app.repository.LectureRepository;
