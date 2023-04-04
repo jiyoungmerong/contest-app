@@ -1,13 +1,9 @@
 package com.example.contest_app.domain;
 
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -17,7 +13,7 @@ import java.util.List;
 @Table(name="User")
 @AllArgsConstructor
 @Builder
-public class User implements UserDetails {
+public class User{
 
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,11 +44,8 @@ public class User implements UserDetails {
 
     private boolean double_major; // 복수전공
 
-    private boolean isEmailVerified; // 이메일 인증 되었는지
-
     private boolean isLogin;
 
-    @Column(length = 1000)
     public String routeInfo; // 루트추천 저장
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -61,48 +54,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Route> routes = new ArrayList<>();
 
-
     public void addRoute(Route route) {
         routes.add(route);
         route.setUser(this);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        return authorities;
-    }
-
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
 }

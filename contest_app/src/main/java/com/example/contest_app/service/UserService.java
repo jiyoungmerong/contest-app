@@ -87,18 +87,13 @@ public class UserService {
         return false;
     }
 
-    public void deleteUser(int user_id, String password) throws UserNotFoundException, InvalidPasswordException {
-        Optional<User> userOptional = userRepository.findById(user_id);
-        if(!userOptional.isPresent()){
-            throw new UserNotFoundException("사용자를 찾을 수 없습니다.");
+    public void deleteUser(int userId) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException("User not found with id: " + userId);
         }
-        User user = userOptional.get();
-        if(!isCorrectPassword(user.getId(), password)){
-            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
-        }
-        userRepository.delete(user);
+        userRepository.delete(user.get());
     }
-
 
 
 }

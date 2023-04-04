@@ -1,15 +1,13 @@
 package com.example.contest_app.controller;
 
-import ch.qos.logback.core.boolex.Matcher;
 import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.UserDto;
-import com.example.contest_app.domain.request.DeleteRequest;
+import com.example.contest_app.domain.request.EditRequest;
 import com.example.contest_app.domain.request.loginRequest;
+import com.example.contest_app.domain.response.EditResponse;
 import com.example.contest_app.domain.response.LoginResponse;
 import com.example.contest_app.domain.response.LogoutResponse;
-import com.example.contest_app.exception.EncryptionException;
-import com.example.contest_app.exception.InvalidPasswordException;
-import com.example.contest_app.exception.UserNotFoundException;
+
 import com.example.contest_app.repository.UserRepository;
 import com.example.contest_app.service.EncryptionService;
 import com.example.contest_app.service.UserService;
@@ -17,13 +15,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -70,6 +67,8 @@ public class UserController {
 
         // LoginResponse 객체 생성 및 리턴
         LoginResponse loginResponse = new LoginResponse();
+        String sessionId = httpSession.getId();
+        loginResponse.setSessionId(sessionId);
 
         loginResponse.setNickname(user.getNickname());
         loginResponse.setMajor1(user.getMajor1());
@@ -95,48 +94,8 @@ public class UserController {
     } // 중복이면 true, 아니면 false
 
 
-    @DeleteMapping("/delete") // 회원탈퇴
-    public ResponseEntity<String> deleteUser(@Valid @RequestBody DeleteRequest deleteRequest, Authentication authentication) {
-        User currentUser = (User) authentication.getPrincipal();
-        int currentUserId = currentUser.getId();
-
-        String password = deleteRequest.getPassword();
-
-        if (password == null || password.isEmpty()) {
-            return ResponseEntity.badRequest().body("비밀번호를 입력해주세요.");
-        }
-
-        try {
-            String encryptedPassword = encryptionService.encrypt(password); // 비밀번호 암호화
-            userService.deleteUser(currentUserId, encryptedPassword);
-            return ResponseEntity.ok("사용자가 성공적으로 삭제되었습니다.");
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body("해당 사용자를 찾을 수 없습니다.");
-        } catch (InvalidPasswordException e) {
-            return ResponseEntity.badRequest().body("잘못된 비밀번호입니다.");
-        } catch (EncryptionException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 암호화에 실패했습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("알 수 없는 오류가 발생했습니다.");
-        }
-    }
-
-
-    @PostMapping("/logout") // 로그아웃
-    public ResponseEntity<LogoutResponse> logout(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.removeAttribute("user"); // 세션에서 로그인 정보 삭제
-            session.invalidate(); // 세션 무효화
-        }
-
-        LogoutResponse logoutResponse = new LogoutResponse("로그아웃 되었습니다.");
-
-        return ResponseEntity.ok(logoutResponse);
-    }
-
-    @GetMapping("/check-login")
-    public ResponseEntity<String> checkLogin(@RequestBody loginRequest request) {
+    @GetMapping("/check-login") // 이메일, 비밀번호 확인 (탈퇴, 회원정보수정에서 사용)
+    public ResponseEntity<String> deleteLogin(@RequestBody loginRequest request) {
         // 이메일과 비밀번호가 올바른지 확인
         Optional<User> user = userRepository.findByEmail(request.getEmail());
         if (!user.isPresent()) {
@@ -150,46 +109,81 @@ public class UserController {
             return ResponseEntity.badRequest().body("이메일과 비밀번호를 확인해주세요.");
         }
 
-        // 회원정보 수정 페이지로 이동
-        return ResponseEntity.ok().body("회원정보 수정 페이지로 이동합니다.");
+        return ResponseEntity.ok().body("옳은 이메일과 비밀번호입니다");
     }
-
-
-
-    @PutMapping("/user-profile") // 유저 정보 수정
-    @ResponseBody
-    public ResponseEntity<UserDto> updateMyProfile(@RequestBody UserDto userDto) {
+    @DeleteMapping("/delete") // 회원탈퇴
+    public ResponseEntity<String> deleteUser(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
         try {
-            // 현재 로그인된 사용자의 정보 불러오기
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = auth.getName();
-            Optional<User> optionalUser = userRepository.findByEmail(email);
-
-            // optionalUser가 비어있으면 404 에러 반환
-            if (!optionalUser.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            // UserDto 객체를 User 객체로 변환하여 DB에 저장
-            User user = optionalUser.get();
-            user.setNickname(userDto.getNickname());
-            user.setSemester(userDto.getSemester());
-            user.setGraduate(userDto.isGraduate());
-            user.setDepartment(userDto.isDepartment());
-            user.setMajor_minor(userDto.isMajor_minor());
-            user.setDouble_major(userDto.isDouble_major());
-            user.setMajor1(userDto.getMajor1());
-            user.setMajor2(userDto.getMajor2());
-            userRepository.save(user);
-
-            // User 객체를 UserDto로 변환하여 전송
-            UserDto updatedUserDto = UserDto.convertToDto(Optional.ofNullable(user));
-            return ResponseEntity.ok(updatedUserDto);
+            userService.deleteUser(user.getId());
+            httpSession.invalidate(); // 세션 무효화
+            return ResponseEntity.ok("탈퇴가 완료되었습니다.");
         } catch (Exception e) {
-            // 예외 발생 시 500에러 응답 코드 반환
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("알 수 없는 오류가 발생했습니다.");
         }
     }
 
+    @PostMapping("/user/logout") // 로그아웃
+    public ResponseEntity<LogoutResponse> logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            User user = (User) session.getAttribute("user");
+            session.removeAttribute("user"); // 세션에서 로그인 정보 삭제
+            session.invalidate(); // 세션 무효화
+            if (user != null) {
+                user.setLogin(false); // 로그인 상태를 false로 변경
+                userRepository.save(user); // 업데이트된 User 엔티티를 데이터베이스에 저장
+            }
+
+            // 세션 쿠키 삭제
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("JSESSIONID")) {
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                        break;
+                    }
+                }
+            }
+
+            LogoutResponse logoutResponse = new LogoutResponse("로그아웃 되었습니다.");
+            return ResponseEntity.ok(logoutResponse);
+        } else {
+            LogoutResponse logoutResponse = new LogoutResponse("로그인 상태가 아닙니다.");
+            return ResponseEntity.badRequest().body(logoutResponse);
+        }
+    }
+
+    @PutMapping("/retouch-users") // 유저 정보 수정
+    public ResponseEntity<EditResponse> updateUser(@RequestBody EditRequest editRequest, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            User user = (User) session.getAttribute("user");
+            if (user != null) {
+                user.setNickname(editRequest.getNickname());
+                user.setSemester(editRequest.getSemester());
+                user.setGraduate(editRequest.isGraduate());
+                user.setDepartment(editRequest.isDepartment());
+                user.setMajor1(editRequest.getMajor1());
+                user.setMajor2(editRequest.getMajor2());
+
+                userRepository.save(user); // 업데이트된 User 엔티티를 데이터베이스에 저장
+
+                EditResponse userResponse = new EditResponse(user);
+                return ResponseEntity.ok(userResponse);
+            }
+        }
+
+        EditResponse e = new EditResponse("로그인이 되어있지 않습니다.");
+        return ResponseEntity.badRequest().body(e);
+    }
+
+
+
 
 }
+
+
+

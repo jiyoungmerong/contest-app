@@ -53,11 +53,11 @@ public class EmailService {
         message.setFrom(setFrom);
         String n = "";
         n += "<div style='margin:100px;'>";
-        n +="<h1> 안녕하세요</h1>";
-        n +="<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        n +="<h1> 안녕하세요 SKHUAZ입니다.</h1>";
+        n +="<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요.<p>";
         n += "<br>";
         n += "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        n += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+        n += "<h3 style='color:#9AC1D1;'>회원가입 인증 코드</h3>";
         n += "<div style='font-size:130%'>";
         n += "CODE : <strong>";
         n += authNum + "</strong><div><br/> "; // 메일에 인증번호 넣기

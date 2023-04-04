@@ -10,6 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
+    private String sessionId;
+
     private String nickname;
 
     private String major1;

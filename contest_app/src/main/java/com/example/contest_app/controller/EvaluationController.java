@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,8 +34,6 @@ public class EvaluationController {
     private final EvaluationRepository evaluationRepository;
 
     private final LectureRepository lectureRepository;
-
-    private final UserRepository userRepository;
 
     @GetMapping("/posts") // 게시글 불러오기
     public ResponseEntity<Page<Evaluation>> getPosts(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
@@ -79,7 +76,7 @@ public class EvaluationController {
         return ResponseEntity.ok("강의평가가 삭제되었습니다.");
     }
 
-    @PutMapping("/posts/{id}") // 게시글 수정
+    @PutMapping("/posts/{id}") // 강의평 수정
     public ResponseEntity<String> updateEvaluation(@PathVariable int id, @RequestBody EvaluationDto evaluationDto, HttpServletRequest request) {
         HttpSession httpSession = request.getSession(false);
         if(httpSession == null || httpSession.getAttribute("user_id") == null) {
@@ -105,7 +102,6 @@ public class EvaluationController {
         evaluation.setPractice(evaluationDto.getPractice());
         evaluation.setPresentation(evaluationDto.getPresentation());
         evaluation.setReview(evaluationDto.getReview());
-        evaluation.setTotal_star(evaluationDto.getTotal_star());
 
         evaluationRepository.save(evaluation);
         return ResponseEntity.ok("강의평가가 수정되었습니다.");

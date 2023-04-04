@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -23,13 +25,11 @@ public class Route {
     @Column(nullable = false)
     private String department; // 전공
 
-    private LocalDate date; // 등록 시간
+    private LocalDateTime date; // 등록 시간
 
-    @Column(nullable = false, length = 100)
-    private String recommendation; // 루트 추천
-
-    @Column(length = 1000)
     private String routeInfo; // 루트 정보
+
+    private String recommendation; // 루트 추천
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -39,7 +39,9 @@ public class Route {
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
-    public Route(String title, String department, LocalDate date, String recommendation, String routeInfo, User user, Lecture lecture) {
+
+
+    public Route(String title, String department, LocalDateTime date, String recommendation, String routeInfo, User user, Lecture lecture) {
         this.title = title;
         this.department = department;
         this.date = date;

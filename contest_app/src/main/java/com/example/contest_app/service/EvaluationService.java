@@ -46,7 +46,6 @@ public class EvaluationService {
                 .practice(evaluationDto.getPractice())
                 .presentation(evaluationDto.getPresentation())
                 .review(evaluationDto.getReview())
-                .total_star(evaluationDto.getTotal_star())
                 .build();
 
         evaluationRepository.save(evaluation);
