@@ -63,9 +63,8 @@ public class EmailService {
         n += authNum + "</strong><div><br/> "; // 메일에 인증번호 넣기
         n += "</div>";
 
-        message.setText(n, "utf-8", "html");
+        message.setText(n,"utf-8", "html");
         return message;
-
     }
 
 

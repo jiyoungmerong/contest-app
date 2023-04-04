@@ -34,8 +34,6 @@ public class UserController {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final EncryptionService encryptionService;
-
     private final UserRepository userRepository;
 
     @PostMapping("/users/new-user") // 회원가입
@@ -179,8 +177,6 @@ public class UserController {
         EditResponse e = new EditResponse("로그인이 되어있지 않습니다.");
         return ResponseEntity.badRequest().body(e);
     }
-
-
 
 
 }

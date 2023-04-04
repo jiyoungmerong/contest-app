@@ -2,6 +2,7 @@ package com.example.contest_app.controller;
 
 import com.example.contest_app.domain.Evaluation;
 import com.example.contest_app.domain.Lecture;
+import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.EvaluationDto;
 import com.example.contest_app.repository.EvaluationRepository;
 import com.example.contest_app.repository.LectureRepository;
@@ -40,14 +41,14 @@ public class EvaluationController {
         return ResponseEntity.ok(evaluationPage);
     }
 
-    @PostMapping("/save") // + 버튼 눌렀을 때 게시글 저장
-    public ResponseEntity<String> createEvaluation(@RequestBody EvaluationDto evaluationDto, HttpServletRequest request, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            // 로그인되어 있지 않은 경우, 로그인 페이지로 이동하도록 리다이렉트
+    @PostMapping("/save")
+    public ResponseEntity<String> createEvaluation(@RequestBody EvaluationDto evaluationDto, HttpServletRequest request, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("로그인이 필요합니다.");
         }
         try {
-            evaluationService.saveEvaluation(evaluationDto, request.getSession());
+            evaluationService.saveEvaluation(evaluationDto, session);
             return ResponseEntity.ok("게시글 저장 성공");
         } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패: " + e.getMessage());
