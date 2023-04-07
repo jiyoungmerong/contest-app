@@ -1,8 +1,7 @@
 package com.example.contest_app.service;
 
-import com.example.contest_app.domain.Lecture;
 import com.example.contest_app.domain.Route;
-import com.example.contest_app.repository.LectureRepository;
+import com.example.contest_app.domain.User;
 import com.example.contest_app.repository.RouteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class RouteService {
     private final RouteRepository routeRepository;
 
-    private final LectureRepository lectureRepository;
+
 
 
     public void save(Route route){
@@ -29,6 +29,11 @@ public class RouteService {
 
     public Page<Route> findByDepartment(String department, Pageable pageable) {
         return routeRepository.findAllByDepartmentContaining(department, pageable);
+    }
+
+    public List<Route> findByUser(User user) {
+        List<Route> routes = routeRepository.findByUser(user);
+        return routes == null ? Collections.emptyList() : routes;
     }
 
 

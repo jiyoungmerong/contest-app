@@ -10,25 +10,29 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class RouteDto {
     private String title;
     private String department;
-    private LocalDateTime date;
+    private LocalDateTime createAt;
 
     @PrePersist
     public void setDate() {
-        this.date = LocalDateTime.now();
+        this.createAt = LocalDateTime.now();
     }
 
     private String userNickname;
+
+    private User user;
+
     private String routeInfo;
     private String recommendation;
 
     public RouteDto(Route route) {
         this.title = route.getTitle();
         this.department = route.getDepartment();
-        this.date = route.getDate();
+        this.createAt = route.getCreateAt();
+        this.userNickname = route.getUserNickname();
+        this.user = route.getUser();
         this.routeInfo = route.getRouteInfo();
         this.recommendation = route.getRecommendation();
     }
@@ -39,8 +43,7 @@ public class RouteDto {
         route.setDepartment(department);
         route.setRecommendation(recommendation);
         route.setRouteInfo(routeInfo);
-        route.setDate(LocalDateTime.now());
+        route.setCreateAt(LocalDateTime.now());
         return route;
     }
-
 }

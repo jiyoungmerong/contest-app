@@ -8,16 +8,17 @@ import com.example.contest_app.repository.RouteRepository;
 import com.example.contest_app.service.RouteService;
 import com.example.contest_app.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -29,8 +30,9 @@ import java.util.stream.Collectors;
 public class RouteController {
     private final UserService userService;
 
-    private final RouteService routeService;
     private final RouteRepository routeRepository;
+
+    private final EntityManager entityManager;
 
     @PostMapping("/save-route-info") // 선수과목제도 저장
     public ResponseEntity<String> saveRouteInfo(@RequestBody RouteInfoRequest request, HttpSession session) {
@@ -66,13 +68,14 @@ public class RouteController {
 
         Route route = routeDto.toEntity();
         route.setRouteInfo(user.getRouteInfo()); // 사용자의 routeInfo 저장
-        route.setUser(user);
+
         route.setUserNickname(user.getNickname()); // 사용자의 닉네임 저장
-        route.setDate(LocalDateTime.now()); // 현재 시간 저장
+        route.setCreateAt(LocalDateTime.now()); // 현재 시간 저장
         try {
             Route savedRoute = routeRepository.save(route);
 
             RouteDto responseDto = new RouteDto(savedRoute);
+            responseDto.setUserNickname(savedRoute.getUserNickname()); // 닉네임 추가
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while saving route.");
@@ -99,59 +102,45 @@ public class RouteController {
         return ResponseEntity.ok(recommendedRoutes);
     }
 
-    @GetMapping("/user/route") // 유저가 작성한 루트글 불러오기
-    public ResponseEntity<List<RouteDto>> getUserRoutes(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-
+    @GetMapping("/routes")
+    public ResponseEntity<?> getRoutes(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this resource.");
         }
-
-        List<Route> userRoutes = routeRepository.findByUser(user);
-
-        List<RouteDto> responseDtoList = userRoutes.stream()
-                .map(RouteDto::new)
-                .collect(Collectors.toList());
-
+        List<Route> routes = routeRepository.findByUserNickname(user.getNickname());
+        List<RouteDto> responseDtoList = new ArrayList<>();
+        for (Route route : routes) {
+            RouteDto responseDto = new RouteDto(route);
+            responseDto.setUserNickname(route.getUserNickname()); // 닉네임 추가
+            responseDtoList.add(responseDto);
+        }
         return ResponseEntity.ok(responseDtoList);
     }
 
 
-    @GetMapping("/Allroutes") // 모든 루트 가져오기
+    @GetMapping("/Allroutes")
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
-        // Route 엔티티 조회
         List<Route> routes = routeRepository.findAll();
-
-        // RouteDto 리스트로 변환하여 반환
         List<RouteDto> routeDtos = routes.stream().map(RouteDto::new).collect(Collectors.toList());
-
         return ResponseEntity.ok(routeDtos);
     }
 
-// 유저가 작성한 루트평 글 가져오기~
-
-
-
-    @GetMapping("/route/{department}") // 전공별로 루프평 가져오기
-    public ResponseEntity<List<RouteDto>> getRoutesByDepartment(@PathVariable String department,
-                                                                @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                @RequestParam(value = "size", defaultValue = "10") int size,
-                                                                HttpSession session) {
-        User user = (User) session.getAttribute("user");
-
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @GetMapping("/route/{department}")
+    public ResponseEntity<List<RouteDto>> getRouteByDepartment(@PathVariable String department) {
+        List<Route> routes = routeRepository.findAllByDepartment(department);
+        List<RouteDto> routeDTOs = new ArrayList<>();
+        for (Route route : routes) {
+            RouteDto routeDto = new RouteDto();
+            routeDto.setTitle(route.getTitle());
+            routeDto.setDepartment(route.getDepartment());
+            routeDto.setCreateAt(route.getCreateAt());
+            routeDto.setUserNickname(route.getUserNickname());
+            routeDto.setRouteInfo(route.getRouteInfo());
+            routeDto.setRecommendation(route.getRecommendation());
+            routeDTOs.add(routeDto);
         }
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Route> routes = routeService.findByDepartment(department, pageable);
-        List<RouteDto> routeDtos = routes.getContent().stream()
-                .map(RouteDto::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(routeDtos);
+        return ResponseEntity.ok(routeDTOs);
     }
-
-
 
 }

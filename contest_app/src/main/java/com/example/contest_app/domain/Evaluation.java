@@ -1,5 +1,6 @@
 package com.example.contest_app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,33 +19,31 @@ public class Evaluation {
     @Column(name = "evaluation_id")
     private int id;
 
-    private int class_year; // 수강년도
+    private String lectureName; // 강의 이름
+
+    private String prfsName; // 교수님 이름
+
+    private int classYear; // 수강년도
 
     private int semester; // 수강 학기
 
-    @Column(length = 5)
-    private String team_play; // 팀플정도
+    private String department;
 
-    @Column(length = 5)
-    private String task; // 과제정도
+    private int teamPlay; // 팀플정도
 
-    @Column(length = 5)
-    private String practice; // 실습정도
+    private int task; // 과제정도
 
-    @Column(length = 5)
-    private String presentation; // 발표 정도
+    private int practice; // 실습정도
+
+    private int presentation; // 발표 정도
+
+    private String userNickname; // 유저 닉네임
 
     @Column(length = 150)
     private String review; // 총평
 
-    private int total_star; // 총 점수
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecture_id")
-    private Lecture lecture;
-
-    // 강의평가 - 유저
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("evaluations")
     private User user;
 }

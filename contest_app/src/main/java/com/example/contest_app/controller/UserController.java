@@ -5,7 +5,6 @@ import com.example.contest_app.domain.dto.UserDto;
 import com.example.contest_app.domain.request.EditRequest;
 import com.example.contest_app.domain.request.loginRequest;
 import com.example.contest_app.domain.response.EditResponse;
-import com.example.contest_app.domain.response.LoginResponse;
 import com.example.contest_app.domain.response.LogoutResponse;
 
 import com.example.contest_app.repository.UserRepository;
@@ -70,7 +69,6 @@ public class UserController {
 
         httpSession.setAttribute("user", user); // 세션에 로그인 정보 유지
 
-        response.put("status", "success");
         response.put("sessionId", httpSession.getId());
         response.put("nickname", user.getNickname());
         response.put("major1", user.getMajor1());
@@ -96,23 +94,29 @@ public class UserController {
     } // 중복이면 true, 아니면 false
 
 
-    @GetMapping("/check-login") // 이메일, 비밀번호 확인 (탈퇴, 회원정보수정에서 사용)
-    public ResponseEntity<String> deleteLogin(@RequestBody loginRequest request) {
-        // 이메일과 비밀번호가 올바른지 확인
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
-        if (!user.isPresent()) {
-            // 오류 메시지 반환
-            return ResponseEntity.badRequest().body("이메일과 비밀번호를 확인해주세요.");
+    @GetMapping("/check-login")
+    public ResponseEntity<Boolean> checkLogin(HttpSession session, @RequestBody loginRequest request) {
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            return ResponseEntity.ok(false); // 로그인되어 있지 않음
         }
 
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.ok(false); // 유저가 없을 때
+        }
+
+        User foundUser = optionalUser.get();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (!passwordEncoder.matches(request.getPassword(), user.get().getPassword())) {
-            // 오류 메시지 반환
-            return ResponseEntity.badRequest().body("이메일과 비밀번호를 확인해주세요.");
+        if (!passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
+            return ResponseEntity.ok(false); // 비밀번호 틀렸을 때
         }
 
-        return ResponseEntity.ok().body("옳은 이메일과 비밀번호입니다");
+        return ResponseEntity.ok(true); // 이메일, 비번 다 맞을 때
     }
+
+
     @DeleteMapping("/delete") // 회원탈퇴
     public ResponseEntity<String> deleteUser(HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
