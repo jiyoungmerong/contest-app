@@ -6,7 +6,6 @@ import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.EvaluationDto;
 import com.example.contest_app.repository.EvaluationRepository;
 import com.example.contest_app.repository.LectureRepository;
-import com.example.contest_app.repository.UserRepository;
 import com.example.contest_app.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +39,7 @@ public class EvaluationController {
         return ResponseEntity.ok(evaluationPage);
     }
 
-    @PostMapping("/save")
+    @PostMapping("/save") // 강의평 저장
     public ResponseEntity<String> createEvaluation(@RequestBody EvaluationDto evaluationDto, HttpServletRequest request, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {

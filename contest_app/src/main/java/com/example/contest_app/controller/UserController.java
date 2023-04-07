@@ -9,7 +9,6 @@ import com.example.contest_app.domain.response.LoginResponse;
 import com.example.contest_app.domain.response.LogoutResponse;
 
 import com.example.contest_app.repository.UserRepository;
-import com.example.contest_app.service.EncryptionService;
 import com.example.contest_app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -19,12 +18,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -44,18 +44,25 @@ public class UserController {
         } catch (DuplicateKeyException e) { // 중복된 이메일인 경우
             return ResponseEntity.badRequest().body("Join failed: Email already exists");
         } catch (Exception e) { // 그 외의 예외 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Join failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패: " + e.getMessage());
         }
     }
 
     @PostMapping("/users/login") // 로그인
-    public ResponseEntity<LoginResponse> login(@RequestBody loginRequest request, HttpSession httpSession) {
+    public Map<String, Object> login(@RequestBody loginRequest request, HttpSession httpSession) {
         User user = userService.findByEmail(request.getEmail());
+        Map<String, Object> response = new HashMap<>();
+
         if (user == null) {
-            return ResponseEntity.badRequest().body(null);
+            response.put("status", "error");
+            response.put("message", "User not found");
+            return response;
         }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.badRequest().body(null);
+            response.put("status", "error");
+            response.put("message", "Invalid password");
+            return response;
         }
 
         user.setLogin(true); // 로그인 상태 업데이트
@@ -63,27 +70,24 @@ public class UserController {
 
         httpSession.setAttribute("user", user); // 세션에 로그인 정보 유지
 
-        // LoginResponse 객체 생성 및 리턴
-        LoginResponse loginResponse = new LoginResponse();
-        String sessionId = httpSession.getId();
-        loginResponse.setSessionId(sessionId);
+        response.put("status", "success");
+        response.put("sessionId", httpSession.getId());
+        response.put("nickname", user.getNickname());
+        response.put("major1", user.getMajor1());
+        response.put("major2", user.getMajor2());
+        response.put("semester", user.getSemester());
+        response.put("department", user.isDepartment());
+        response.put("email", user.getEmail());
+        response.put("password", user.getPassword());
+        response.put("graduate", user.isGraduate());
+        response.put("major_minor", user.isMajor_minor());
+        response.put("double_major", user.isDouble_major());
+        response.put("login", user.isLogin());
+        response.put("message", "Login Success");
 
-        loginResponse.setNickname(user.getNickname());
-        loginResponse.setMajor1(user.getMajor1());
-        loginResponse.setMajor2(user.getMajor2());
-        loginResponse.setSemester(user.getSemester());
-        loginResponse.setDepartment(user.isDepartment());
-        loginResponse.setEmail(user.getEmail());
-        loginResponse.setPassword(user.getPassword());
-        loginResponse.setGraduate(user.isGraduate());
-        loginResponse.setMajor_minor(user.isMajor_minor());
-        loginResponse.setDouble_major(user.isDouble_major());
-        loginResponse.setLogin(user.isLogin());
-        loginResponse.setMessage("Login Success");
-
-        return ResponseEntity.ok(loginResponse);
-
+        return response;
     }
+
 
 
     @GetMapping("/checkDuplicate/{nickname}") // 닉네임 중복 확인
@@ -145,7 +149,6 @@ public class UserController {
                     }
                 }
             }
-
             LogoutResponse logoutResponse = new LogoutResponse("로그아웃 되었습니다.");
             return ResponseEntity.ok(logoutResponse);
         } else {

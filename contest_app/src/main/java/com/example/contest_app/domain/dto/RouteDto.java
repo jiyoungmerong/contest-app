@@ -4,6 +4,7 @@ import com.example.contest_app.domain.Route;
 import com.example.contest_app.domain.User;
 import lombok.*;
 
+import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,6 +15,11 @@ public class RouteDto {
     private String title;
     private String department;
     private LocalDateTime date;
+
+    @PrePersist
+    public void setDate() {
+        this.date = LocalDateTime.now();
+    }
 
     private String userNickname;
     private String routeInfo;

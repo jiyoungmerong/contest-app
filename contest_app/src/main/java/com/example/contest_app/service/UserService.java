@@ -85,5 +85,13 @@ public class UserService {
         userRepository.delete(user.get());
     }
 
+    @Transactional(readOnly = true)
+    public User getUserByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return user;
+    }
+
+
 
 }

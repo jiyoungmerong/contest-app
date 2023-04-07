@@ -30,10 +30,10 @@ public class Lecture { // 강의
 
     private String department; // 전공 구분
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     private List<Evaluation> evaluations;
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     private List<Route> route;
 
     @Builder

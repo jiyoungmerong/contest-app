@@ -1,6 +1,8 @@
 package com.example.contest_app.domain;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,7 +25,6 @@ public class User{
 
     @Column(unique = true)
     private String password; // 비밀번호
-
 
     @Column(length = 10, unique = true)
     private String nickname; // 닉네임
@@ -48,10 +49,12 @@ public class User{
 
     public String routeInfo; // 루트추천 저장
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Evaluation> evaluations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Route> routes = new ArrayList<>();
 
     public void addRoute(Route route) {
