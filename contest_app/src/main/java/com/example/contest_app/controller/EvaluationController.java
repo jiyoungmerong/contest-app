@@ -25,7 +25,7 @@ public class EvaluationController {
 
     private final EvaluationRepository evaluationRepository;
 
-    @GetMapping("/posts") // 게시글 불러오기
+    @GetMapping("/AllEvaluation") // 모든 강의평 불러오기
     public ResponseEntity<Page<Evaluation>> getPosts(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Page<Evaluation> evaluationPage = evaluationRepository.findAll(pageable);
         return ResponseEntity.ok(evaluationPage);
@@ -71,7 +71,9 @@ public class EvaluationController {
         return ResponseEntity.ok("삭제 성공");
     }
 
-    @GetMapping("/my-evaluations")
+    // 강의평 수정
+
+    @GetMapping("/my-evaluations") // 내가 작성한 강의평 보기
     public ResponseEntity<?> getMyEvaluations(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
