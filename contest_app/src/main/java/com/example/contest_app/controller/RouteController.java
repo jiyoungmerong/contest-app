@@ -3,6 +3,7 @@ package com.example.contest_app.controller;
 import com.example.contest_app.domain.Evaluation;
 import com.example.contest_app.domain.Route;
 import com.example.contest_app.domain.User;
+import com.example.contest_app.domain.dto.EvaluationDto;
 import com.example.contest_app.domain.dto.RouteDto;
 import com.example.contest_app.domain.request.RouteEditRequest;
 import com.example.contest_app.domain.request.RouteInfoRequest;
@@ -99,22 +100,57 @@ public class RouteController {
 
         return ResponseEntity.ok(recommendedRoutes);
     }
+//
+//    @GetMapping("/my-evaluations") // 내가 작성한 강의평 불러오기
+//    public ResponseEntity<List<EvaluationDto>> getAllEvaluations(HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        List<Evaluation> evaluations = evaluationRepository.findAll();
+//        List<EvaluationDto> responseDtos = new ArrayList<>();
+//        for (Evaluation evaluation : evaluations) {
+//            EvaluationDto responseDto = new EvaluationDto();
+//            responseDto.setLectureName(evaluation.getLectureName());
+//            responseDto.setPrfsName(evaluation.getPrfsName());
+//            responseDto.setClassYear(evaluation.getClassYear());
+//            responseDto.setSemester(evaluation.getSemester());
+//            responseDto.setDepartment(evaluation.getDepartment());
+//            responseDto.setTeamPlay(evaluation.getTeamPlay());
+//            responseDto.setTask(evaluation.getTask());
+//            responseDto.setPractice(evaluation.getPractice());
+//            responseDto.setPresentation(evaluation.getPresentation());
+//            responseDto.setReview(evaluation.getReview());
+//            responseDto.setUserNickname(evaluation.getNickname());
+//
+//            responseDtos.add(responseDto);
+//        }
+//        return ResponseEntity.ok(responseDtos);
+//    }
+//
+//    @GetMapping("my-routes")
+//    public ResponseEntity<List<RouteDto>> getAllRoutes(HttpSession session){
+//        User user = (User) session.getAttribute("user");
+//        List<Route> routes = routeRepository.findAll();
+//        List<RouteDto> routeDtos = new ArrayList<>();
+//        for (Evaluation evaluation : evaluations) {
+//
+//    }
 
-    @GetMapping("/user/routes") // 자신이 작성했던 루트
-    public ResponseEntity<?> getRoutes(HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this resource.");
-        }
-        List<Route> routes = routeRepository.findByUserNickname(user.getNickname());
-        List<RouteDto> responseDtoList = new ArrayList<>();
-        for (Route route : routes) {
-            RouteDto responseDto = new RouteDto(route);
-            responseDto.setUserNickname(route.getNickname()); // 닉네임 추가
-            responseDtoList.add(responseDto);
-        }
-        return ResponseEntity.ok(responseDtoList);
-    }
+
+//
+//    @GetMapping("/user/routes") // 자신이 작성했던 루트
+//    public ResponseEntity<?> getRoutes(HttpSession httpSession) {
+//        User user = (User) httpSession.getAttribute("user");
+////        if (user == null) {
+////            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this resource.");
+////        }
+//        List<Route> routes = routeRepository.findByUserNickname(user.getNickname());
+//        List<RouteDto> responseDtoList = new ArrayList<>();
+//        for (Route route : routes) {
+//            RouteDto responseDto = new RouteDto(route);
+//            responseDto.setUserNickname(route.getNickname()); // 닉네임 추가
+//            responseDtoList.add(responseDto);
+//        }
+//        return ResponseEntity.ok(responseDtoList);
+//    }
 
     @GetMapping("/Allroutes") // 모든 루트 불러오기
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
