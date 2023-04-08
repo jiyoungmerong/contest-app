@@ -35,9 +35,6 @@ public class RouteService {
         return routes == null ? Collections.emptyList() : routes;
     }
 
-    public List<Route> getRoutesByTitle(String title) {
-        return routeRepository.findByTitleContaining(title);
-    }
 
 
 }

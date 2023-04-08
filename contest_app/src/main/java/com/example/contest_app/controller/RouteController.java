@@ -137,43 +137,6 @@ public class RouteController {
     }
 
 
-    @GetMapping("/route/{department}") // 전공에 따른 루트평
-    public ResponseEntity<List<RouteDto>> getRouteByDepartment(@PathVariable String department) {
-        List<Route> routes = routeRepository.findAllByDepartment(department);
-        List<RouteDto> routeDTOs = new ArrayList<>();
-        for (Route route : routes) {
-            RouteDto routeDto = new RouteDto();
-            routeDto.setTitle(route.getTitle());
-            routeDto.setDepartment(route.getDepartment());
-            routeDto.setCreatedAt(route.getCreatedAt());
-            routeDto.setUserNickname(route.getNickname());
-            routeDto.setRouteInfo(route.getRouteInfo());
-            routeDto.setRecommendation(route.getRecommendation());
-            routeDTOs.add(routeDto);
-        }
-        return ResponseEntity.ok(routeDTOs);
-    }
-
-//    @GetMapping("/route/title") // 제목으로 검색
-//    public ResponseEntity<?> getRoutesByTitle(@RequestParam String title){
-//        List<Route> routes = routeService.getRoutesByTitle(title);
-//        List<RouteDto> responseDtoList = new ArrayList<>();
-//        for (Route route : routes) {
-//            RouteDto responseDto = new RouteDto(route);
-//            responseDto.setUserNickname(route.getUser().getNickname());
-//            responseDtoList.add(responseDto);
-//        }
-//        return ResponseEntity.ok(responseDtoList);
-//    }
-
-//    @GetMapping("/evaluation/department") // 전공별로 불러오기
-//    public ResponseEntity<List<Evaluation>> getEvaluationsByDepartment(@RequestParam String department) {
-//        List<Evaluation> evaluations = evaluationRepository.findByDepartment(department);
-//        return ResponseEntity.ok(evaluations);
-//    }
-//
-//    @GetMapping
-
     @PutMapping("routes/{id}") // 루트추천 글 수정
     public ResponseEntity<RouteDto> updateRoute(@PathVariable int id, @Valid @RequestBody RouteEditRequest editResponse, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -225,6 +188,29 @@ public class RouteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Route not found.");
         }
     }
+
+    @GetMapping("/route/title") // 제목으로 검색
+    public ResponseEntity<List<Route>> getRoutesByTitle(@RequestParam String title) {
+        List<Route> routes = routeRepository.findByTitleContaining(title);
+        return ResponseEntity.ok(routes);
+    }
+    @GetMapping("/route/{department}") // 전공에 따른 루트평검색
+    public ResponseEntity<List<RouteDto>> getRouteByDepartment(@PathVariable String department) {
+        List<Route> routes = routeRepository.findAllByDepartment(department);
+        List<RouteDto> routeDTOs = new ArrayList<>();
+        for (Route route : routes) {
+            RouteDto routeDto = new RouteDto();
+            routeDto.setTitle(route.getTitle());
+            routeDto.setDepartment(route.getDepartment());
+            routeDto.setCreatedAt(route.getCreatedAt());
+            routeDto.setUserNickname(route.getNickname());
+            routeDto.setRouteInfo(route.getRouteInfo());
+            routeDto.setRecommendation(route.getRecommendation());
+            routeDTOs.add(routeDto);
+        }
+        return ResponseEntity.ok(routeDTOs);
+    }
+
 
 
 }
