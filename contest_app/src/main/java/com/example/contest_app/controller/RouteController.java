@@ -102,7 +102,7 @@ public class RouteController {
         return ResponseEntity.ok(recommendedRoutes);
     }
 
-    @GetMapping("/routes")
+    @GetMapping("/user/routes") // 자신이 작성했던 루트
     public ResponseEntity<?> getRoutes(HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         if (user == null) {
@@ -119,14 +119,14 @@ public class RouteController {
     }
 
 
-    @GetMapping("/Allroutes")
+    @GetMapping("/Allroutes") // 모든 루트평
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
         List<Route> routes = routeRepository.findAll();
         List<RouteDto> routeDtos = routes.stream().map(RouteDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(routeDtos);
     }
 
-    @GetMapping("/route/{department}")
+    @GetMapping("/route/{department}") // 전공에 따른 루트평
     public ResponseEntity<List<RouteDto>> getRouteByDepartment(@PathVariable String department) {
         List<Route> routes = routeRepository.findAllByDepartment(department);
         List<RouteDto> routeDTOs = new ArrayList<>();

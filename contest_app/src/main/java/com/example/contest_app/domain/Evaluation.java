@@ -1,6 +1,7 @@
 package com.example.contest_app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,4 +47,16 @@ public class Evaluation {
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties("evaluations")
     private User user;
+
+    // User 필드에 대한 getter
+    @JsonProperty("user")
+    public User getUser() {
+        return user;
+    }
+
+    // User 필드에 대한 setter
+    @JsonProperty("user")
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

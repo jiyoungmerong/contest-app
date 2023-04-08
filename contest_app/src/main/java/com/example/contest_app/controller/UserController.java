@@ -48,20 +48,20 @@ public class UserController {
     }
 
     @PostMapping("/users/login") // 로그인
-    public Map<String, Object> login(@RequestBody loginRequest request, HttpSession httpSession) {
+    public Map<String, Object> login(@RequestBody loginRequest request, HttpSession httpSession, HttpServletResponse response) {
         User user = userService.findByEmail(request.getEmail());
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> responseBody = new HashMap<>();
 
         if (user == null) {
-            response.put("status", "error");
-            response.put("message", "User not found");
-            return response;
+            responseBody.put("status", "error");
+            responseBody.put("message", "User not found");
+            return responseBody;
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            response.put("status", "error");
-            response.put("message", "Invalid password");
-            return response;
+            responseBody.put("status", "error");
+            responseBody.put("message", "Invalid password");
+            return responseBody;
         }
 
         user.setLogin(true); // 로그인 상태 업데이트
@@ -69,24 +69,28 @@ public class UserController {
 
         httpSession.setAttribute("user", user); // 세션에 로그인 정보 유지
 
-        response.put("sessionId", httpSession.getId());
-        response.put("nickname", user.getNickname());
-        response.put("major1", user.getMajor1());
-        response.put("major2", user.getMajor2());
-        response.put("semester", user.getSemester());
-        response.put("department", user.isDepartment());
-        response.put("email", user.getEmail());
-        response.put("password", user.getPassword());
-        response.put("graduate", user.isGraduate());
-        response.put("major_minor", user.isMajor_minor());
-        response.put("double_major", user.isDouble_major());
-        response.put("login", user.isLogin());
-        response.put("message", "Login Success");
+        // 세션 아이디를 쿠키에 추가
+        Cookie sessionCookie = new Cookie("sessionId", httpSession.getId());
+        sessionCookie.setHttpOnly(true);
+        sessionCookie.setMaxAge(-1); // 브라우저를 닫으면 쿠키가 삭제됩니다.
+        response.addCookie(sessionCookie);
 
-        return response;
+        responseBody.put("sessionId", httpSession.getId());
+        responseBody.put("nickname", user.getNickname());
+        responseBody.put("major1", user.getMajor1());
+        responseBody.put("major2", user.getMajor2());
+        responseBody.put("semester", user.getSemester());
+        responseBody.put("department", user.isDepartment());
+        responseBody.put("email", user.getEmail());
+        responseBody.put("password", user.getPassword());
+        responseBody.put("graduate", user.isGraduate());
+        responseBody.put("major_minor", user.isMajor_minor());
+        responseBody.put("double_major", user.isDouble_major());
+        responseBody.put("login", user.isLogin());
+        responseBody.put("message", "Login Success");
+
+        return responseBody;
     }
-
-
 
     @GetMapping("/checkDuplicate/{nickname}") // 닉네임 중복 확인
     public boolean checkDuplicateNickname(@PathVariable String nickname) {
