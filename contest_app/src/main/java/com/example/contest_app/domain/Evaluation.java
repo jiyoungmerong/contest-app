@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "evaluaion")
+@Table(name = "evaluation")
 public class Evaluation {
 
     @Id
@@ -20,16 +20,20 @@ public class Evaluation {
     @Column(name = "evaluation_id")
     private int id;
 
+    @Column(name = "lecture_name")
     private String lectureName; // 강의 이름
 
+    @Column(name = "prfs_name")
     private String prfsName; // 교수님 이름
 
+    @Column(name="class_year")
     private int classYear; // 수강년도
 
     private int semester; // 수강 학기
 
     private String department;
 
+    @Column(name="team_play")
     private int teamPlay; // 팀플정도
 
     private int task; // 과제정도
@@ -38,7 +42,7 @@ public class Evaluation {
 
     private int presentation; // 발표 정도
 
-    private String userNickname; // 유저 닉네임
+    private String nickname; // 유저 닉네임
 
     @Column(length = 150)
     private String review; // 총평

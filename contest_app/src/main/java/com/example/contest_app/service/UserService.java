@@ -54,6 +54,7 @@ public class UserService {
     }
 
 
+
     public boolean checkDuplicateNickname(String username) {
         return userRepository.findByNickname(username).isPresent();
     }
@@ -68,15 +69,6 @@ public class UserService {
         return Collections.emptyList();
     }
 
-    public boolean isCorrectPassword(int user_id, String password){ // 탈퇴시 비밀번호 확인
-        User user = userRepository.findById(user_id).orElse(null);
-        if(user!=null){
-            String encodepassword = user.getPassword();
-            return passwordEncoder.matches(password, encodepassword);
-        }
-        return false;
-    }
-
     public void deleteUser(int userId) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
@@ -84,14 +76,6 @@ public class UserService {
         }
         userRepository.delete(user.get());
     }
-
-    @Transactional(readOnly = true)
-    public User getUserByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        User user = optionalUser.orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return user;
-    }
-
 
 
 }

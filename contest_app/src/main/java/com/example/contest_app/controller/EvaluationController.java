@@ -5,6 +5,8 @@ import com.example.contest_app.domain.Route;
 import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.EvaluationDto;
 import com.example.contest_app.domain.dto.RouteDto;
+import com.example.contest_app.domain.request.EvaluationEditRequest;
+import com.example.contest_app.domain.request.RouteEditRequest;
 import com.example.contest_app.repository.EvaluationRepository;
 import com.example.contest_app.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +33,7 @@ public class EvaluationController {
     private final EvaluationRepository evaluationRepository;
 
     @GetMapping("/AllEvaluation") // 모든 강의평 불러오기
-    public ResponseEntity<List<Evaluation>> getPosts(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<List<Evaluation>> getPosts(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Evaluation> evaluationPage = evaluationRepository.findAll(pageable);
         List<Evaluation> evaluationList = evaluationPage.getContent();
         return ResponseEntity.ok(evaluationList);
@@ -54,33 +58,12 @@ public class EvaluationController {
         responseDto.setPractice(evaluation.getPractice());
         responseDto.setPresentation(evaluation.getPresentation());
         responseDto.setReview(evaluation.getReview());
-        responseDto.setUserNickname(evaluation.getUserNickname());
+        responseDto.setUserNickname(evaluation.getNickname());
         return ResponseEntity.ok(responseDto);
     }
 
-//
 
-
-    // 강의평 수정@DeleteMapping("/evaluation/{id}") // 게시글 삭제
-    ////    public ResponseEntity<Void> deleteEvaluation(@PathVariable int id, HttpSession session) {
-    ////        User user = (User) session.getAttribute("user");
-    ////        if (user == null) {
-    ////            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    ////        }
-    ////        Optional<Evaluation> evaluationOptional = evaluationRepository.findById(id);
-    ////        if (evaluationOptional.isEmpty()) {
-    ////            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    ////        }
-    ////        Evaluation evaluation = evaluationOptional.get();
-    ////        List<Evaluation> userEvaluations = evaluationRepository.findByUser(user);
-    ////        if (!userEvaluations.contains(evaluation)) {
-    ////            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    ////        }
-    ////        evaluationRepository.delete(evaluation);
-    ////        return ResponseEntity.noContent().build();
-    ////    }
-
-    @GetMapping("/my-evaluations")
+    @GetMapping("/my-evaluations") // 내가 작성한 강의평 불러오기
     public ResponseEntity<List<EvaluationDto>> getAllEvaluations(HttpSession session) {
         User user = (User) session.getAttribute("user");
         List<Evaluation> evaluations = evaluationRepository.findAll();
@@ -97,7 +80,7 @@ public class EvaluationController {
             responseDto.setPractice(evaluation.getPractice());
             responseDto.setPresentation(evaluation.getPresentation());
             responseDto.setReview(evaluation.getReview());
-            responseDto.setUserNickname(evaluation.getUserNickname());
+            responseDto.setUserNickname(evaluation.getNickname());
 
             responseDtos.add(responseDto);
         }
@@ -105,18 +88,120 @@ public class EvaluationController {
     }
 
 
-//    @GetMapping("/user/routes") // 자신이 작성했던 루트
-//    public ResponseEntity<?> getRoutes(HttpSession httpSession) {
-//
-//        List<Route> routes = routeRepository.findByUserNickname(user.getNickname());
-//        List<RouteDto> responseDtoList = new ArrayList<>();
-//        for (Route route : routes) {
-//            RouteDto responseDto = new RouteDto(route);
-//            responseDto.setUserNickname(route.getUserNickname()); // 닉네임 추가
-//            responseDtoList.add(responseDto);
-//        }
-//        return ResponseEntity.ok(responseDtoList);
-//    }
+    @PutMapping("/evaluation/{evaluation_id}") // 강의평 수정
+    public ResponseEntity<EvaluationDto> updateEvaluation(@PathVariable int evaluation_id, @Valid @RequestBody EvaluationEditRequest evaluationEditRequest,
+                                                          HttpSession session) {
+        User user = (User) session.getAttribute("user");
+
+        Optional<Evaluation> optionalEvaluation = evaluationRepository.findById(evaluation_id);
+        if (optionalEvaluation.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Evaluation evaluation = optionalEvaluation.get();
+
+        if (evaluationEditRequest.getLectureName() != null) {
+            evaluation.setLectureName(evaluationEditRequest.getLectureName());
+        }
+        else{
+            evaluation.setNickname(evaluation.getNickname());
+        }
+
+        if (evaluationEditRequest.getPrfsName() != null) {
+            evaluation.setPrfsName(evaluationEditRequest.getPrfsName());
+        }
+        else{
+            evaluation.setPrfsName(evaluation.getPrfsName());
+        }
+
+        if (evaluationEditRequest.getClassYear() != 0) {
+            evaluation.setClassYear(evaluationEditRequest.getClassYear());
+        }
+        else{
+            evaluation.setClassYear(evaluation.getClassYear());
+        }
+
+        if (evaluationEditRequest.getSemester() != 0) {
+            evaluation.setSemester(evaluationEditRequest.getSemester());
+        }
+        else{
+            evaluation.setSemester(evaluation.getSemester());
+        }
+
+        if (evaluationEditRequest.getDepartment() != null) {
+            evaluation.setDepartment(evaluationEditRequest.getDepartment());
+        }
+        else{
+            evaluation.setDepartment(evaluation.getDepartment());
+        }
+
+        if (evaluationEditRequest.getTeamPlay() != 0) {
+            evaluation.setTeamPlay(evaluationEditRequest.getTeamPlay());
+        }
+        else{
+            evaluation.setTeamPlay(evaluation.getTeamPlay());
+        }
+
+        if (evaluationEditRequest.getTask() != 0) {
+            evaluation.setTask(evaluationEditRequest.getTask());
+        }
+        else{
+            evaluation.setTask(evaluation.getTask());
+        }
+
+        if (evaluationEditRequest.getPractice() != 0) {
+            evaluation.setPractice(evaluationEditRequest.getPractice());
+        }
+        else{
+            evaluation.setPresentation(evaluation.getPresentation());
+        }
+
+        if (evaluationEditRequest.getPresentation() != 0) {
+            evaluation.setPresentation(evaluationEditRequest.getPresentation());
+        }
+        else{
+            evaluation.setPresentation(evaluation.getPresentation());
+        }
+
+        if (evaluationEditRequest.getReview() != null) {
+            evaluation.setReview(evaluationEditRequest.getReview());
+        }
+        else{
+            evaluation.setReview(evaluation.getReview());
+        }
+
+        evaluationRepository.save(evaluation);
+        EvaluationDto evaluationDto = new EvaluationDto(evaluation);
+        evaluationDto.setUserNickname(user.getNickname()); // EvaluationDto 객체의 userNickname 필드 값을 설정해줍니다.
+
+        return ResponseEntity.ok(new EvaluationDto(evaluation));
+    }
+
+    @DeleteMapping("/evaluation/{evaluation_id}") // 루트글 삭제
+    public ResponseEntity<?> deleteRoute(@PathVariable("evaluation_id") int evaluation_id, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this resource.");
+        }
+
+        Optional<Evaluation> optionalEvaluation = evaluationRepository.findById(evaluation_id);
+
+        if (optionalEvaluation.isPresent()) {
+            Evaluation evaluation = optionalEvaluation.get();
+
+            // 사용자가 작성한 루트인지 확인
+            if (!evaluation.getNickname().equals(user.getNickname())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this route.");
+            }
+
+            evaluationRepository.delete(evaluation);
+            return ResponseEntity.ok("evaluation deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("evaluation not found.");
+        }
+    }
+
 
 
     @GetMapping("/evaluation/department") // 전공별로 불러오기

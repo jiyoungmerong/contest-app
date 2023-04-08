@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,10 +17,15 @@ public interface RouteRepository extends JpaRepository<Route, Integer>{
 
     List<Route> findByUserNickname(String userNickname);
 
-
     Page<Route> findAllByDepartmentContaining(String department, Pageable pageable);
 
     List<Route> findAllByDepartment(String department);
+
+    @Query("SELECT r FROM Route r ORDER BY r.createdAt DESC")
+    List<Route> findAllOrderByCreateAtDesc();
+
+    List<Route> findByTitleContaining(String title);
+
 
 
 }

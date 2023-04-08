@@ -98,7 +98,7 @@ public class UserController {
     } // 중복이면 true, 아니면 false
 
 
-    @GetMapping("/check-login")
+    @GetMapping("/check-login") // 탈퇴, 정보수정 시 로그인
     public ResponseEntity<Boolean> checkLogin(HttpSession session, @RequestBody loginRequest request) {
         User user = (User) session.getAttribute("user");
 
@@ -166,23 +166,22 @@ public class UserController {
     }
 
     @PutMapping("/retouch-users") // 유저 정보 수정
-    public ResponseEntity<EditResponse> updateUser(@RequestBody EditRequest editRequest, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            User user = (User) session.getAttribute("user");
-            if (user != null) {
-                user.setNickname(editRequest.getNickname());
-                user.setSemester(editRequest.getSemester());
-                user.setGraduate(editRequest.isGraduate());
-                user.setDepartment(editRequest.isDepartment());
-                user.setMajor1(editRequest.getMajor1());
-                user.setMajor2(editRequest.getMajor2());
+    public ResponseEntity<EditResponse> updateUser(@RequestBody EditRequest editRequest, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            user.setNickname(editRequest.getNickname());
+            user.setSemester(editRequest.getSemester());
+            user.setGraduate(editRequest.isGraduate());
+            user.setDepartment(editRequest.isDepartment());
+            user.setMajor1(editRequest.getMajor1());
+            user.setMajor2(editRequest.getMajor2());
+            user.setMajor_minor(editRequest.isMajor_minor());
+            user.setDouble_major(editRequest.isDouble_major());
 
-                userRepository.save(user); // 업데이트된 User 엔티티를 데이터베이스에 저장
+            userRepository.save(user); // 업데이트된 User 엔티티를 데이터베이스에 저장
 
-                EditResponse userResponse = new EditResponse(user);
-                return ResponseEntity.ok(userResponse);
-            }
+            EditResponse userResponse = new EditResponse(user);
+            return ResponseEntity.ok(userResponse);
         }
 
         EditResponse e = new EditResponse("로그인이 되어있지 않습니다.");

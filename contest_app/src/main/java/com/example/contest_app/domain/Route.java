@@ -19,16 +19,16 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
     private String title; // 제목
 
-    @Column(nullable = false)
     private String department; // 전공
 
-    private LocalDateTime createAt; // 등록 시간
+    @Column(name = "created_at")
+    private LocalDateTime createdAt; // 등록 시간
 
-    private String userNickname;
+    private String nickname;
 
+    @Column(name="route_info")
     private String routeInfo; // 루트 정보
 
     private String recommendation; // 루트 추천

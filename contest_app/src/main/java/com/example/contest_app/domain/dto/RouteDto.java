@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 public class RouteDto {
     private String title;
     private String department;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @PrePersist
     public void setDate() {
-        this.createAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     private String userNickname;
@@ -30,8 +30,8 @@ public class RouteDto {
     public RouteDto(Route route) {
         this.title = route.getTitle();
         this.department = route.getDepartment();
-        this.createAt = route.getCreateAt();
-        this.userNickname = route.getUserNickname();
+        this.createdAt = route.getCreatedAt();
+        this.userNickname = route.getNickname();
         this.user = route.getUser();
         this.routeInfo = route.getRouteInfo();
         this.recommendation = route.getRecommendation();
@@ -43,7 +43,7 @@ public class RouteDto {
         route.setDepartment(department);
         route.setRecommendation(recommendation);
         route.setRouteInfo(routeInfo);
-        route.setCreateAt(LocalDateTime.now());
+        route.setCreatedAt(LocalDateTime.now());
         return route;
     }
 }

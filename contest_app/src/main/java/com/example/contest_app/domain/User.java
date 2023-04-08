@@ -45,10 +45,11 @@ public class User{
 
     private boolean double_major; // 복수전공
 
-    private boolean isLogin;
+    @Column(name = "is_login")
+    private boolean isLogin; // 로그인 여부
 
+    @Column(name = "route_info")
     public String routeInfo; // 루트추천 저장
-
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Evaluation> evaluations = new ArrayList<>();

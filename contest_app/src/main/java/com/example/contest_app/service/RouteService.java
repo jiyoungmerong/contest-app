@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,8 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RouteService {
     private final RouteRepository routeRepository;
-
-
 
 
     public void save(Route route){
@@ -36,7 +35,9 @@ public class RouteService {
         return routes == null ? Collections.emptyList() : routes;
     }
 
-
+    public List<Route> getRoutesByTitle(String title) {
+        return routeRepository.findByTitleContaining(title);
+    }
 
 
 }

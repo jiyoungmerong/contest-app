@@ -28,25 +28,16 @@ public class EvaluationService {
         evaluation.setPractice(evaluationDto.getPractice());
         evaluation.setPresentation(evaluationDto.getPresentation());
         evaluation.setReview(evaluationDto.getReview());
-        evaluation.setUserNickname(user.getNickname());
+        evaluation.setNickname(user.getNickname());
 
 
         return evaluationRepository.save(evaluation);
     }
 
-    public List<Evaluation> getEvaluationsByDepartment(String department) {
-        return evaluationRepository.findByDepartment(department);
-    }
 
     public List<Evaluation> getEvaluationsByLecture_name(String title) {
         return evaluationRepository.findByLectureName(title);
     }
-
-    public List<Evaluation> getEvaluationsByUser(User user) {
-        return evaluationRepository.findByUser(user);
-    }
-
-
 
 
 }
