@@ -81,7 +81,6 @@ public class RouteController {
         }
     }
 
-
     @GetMapping("/user/routeInfo") //유저테이블에 있는 routeInfo 가져오기 (루트가져오기 버튼)
     public ResponseEntity<List<String>> getRecommendedRoutes(HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -100,57 +99,30 @@ public class RouteController {
 
         return ResponseEntity.ok(recommendedRoutes);
     }
-//
-//    @GetMapping("/my-evaluations") // 내가 작성한 강의평 불러오기
-//    public ResponseEntity<List<EvaluationDto>> getAllEvaluations(HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        List<Evaluation> evaluations = evaluationRepository.findAll();
-//        List<EvaluationDto> responseDtos = new ArrayList<>();
-//        for (Evaluation evaluation : evaluations) {
-//            EvaluationDto responseDto = new EvaluationDto();
-//            responseDto.setLectureName(evaluation.getLectureName());
-//            responseDto.setPrfsName(evaluation.getPrfsName());
-//            responseDto.setClassYear(evaluation.getClassYear());
-//            responseDto.setSemester(evaluation.getSemester());
-//            responseDto.setDepartment(evaluation.getDepartment());
-//            responseDto.setTeamPlay(evaluation.getTeamPlay());
-//            responseDto.setTask(evaluation.getTask());
-//            responseDto.setPractice(evaluation.getPractice());
-//            responseDto.setPresentation(evaluation.getPresentation());
-//            responseDto.setReview(evaluation.getReview());
-//            responseDto.setUserNickname(evaluation.getNickname());
-//
-//            responseDtos.add(responseDto);
-//        }
-//        return ResponseEntity.ok(responseDtos);
-//    }
-//
-//    @GetMapping("my-routes")
-//    public ResponseEntity<List<RouteDto>> getAllRoutes(HttpSession session){
-//        User user = (User) session.getAttribute("user");
-//        List<Route> routes = routeRepository.findAll();
-//        List<RouteDto> routeDtos = new ArrayList<>();
-//        for (Evaluation evaluation : evaluations) {
-//
-//    }
 
 
-//
-//    @GetMapping("/user/routes") // 자신이 작성했던 루트
-//    public ResponseEntity<?> getRoutes(HttpSession httpSession) {
-//        User user = (User) httpSession.getAttribute("user");
-////        if (user == null) {
-////            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this resource.");
-////        }
-//        List<Route> routes = routeRepository.findByUserNickname(user.getNickname());
-//        List<RouteDto> responseDtoList = new ArrayList<>();
-//        for (Route route : routes) {
-//            RouteDto responseDto = new RouteDto(route);
-//            responseDto.setUserNickname(route.getNickname()); // 닉네임 추가
-//            responseDtoList.add(responseDto);
-//        }
-//        return ResponseEntity.ok(responseDtoList);
-//    }
+    @GetMapping("my-routes") // 내가 작성한 루트 보기
+    public ResponseEntity<List<RouteDto>> getAllRoutes(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        List<Route> routes = routeRepository.findAll();
+        List<RouteDto> routeDtos = new ArrayList<>();
+        for (Route route : routes) {
+            RouteDto routeDto = new RouteDto();
+            routeDto.setTitle(route.getTitle());
+            routeDto.setDepartment(route.getDepartment());
+            routeDto.setCreatedAt(route.getCreatedAt());
+            routeDto.setUserNickname(route.getNickname());
+            routeDto.setRouteInfo(route.getRouteInfo());
+            routeDto.setRecommendation(route.getRecommendation());
+
+            routeDtos.add(routeDto);
+
+        }
+        return ResponseEntity.ok(routeDtos);
+
+    }
+
+
 
     @GetMapping("/Allroutes") // 모든 루트 불러오기
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
@@ -182,17 +154,25 @@ public class RouteController {
         return ResponseEntity.ok(routeDTOs);
     }
 
-    @GetMapping("/route/title") // 제목으로 검색
-    public ResponseEntity<?> getRoutesByTitle(@RequestParam String title){
-        List<Route> routes = routeService.getRoutesByTitle(title);
-        List<RouteDto> responseDtoList = new ArrayList<>();
-        for (Route route : routes) {
-            RouteDto responseDto = new RouteDto(route);
-            responseDto.setUserNickname(route.getUser().getNickname());
-            responseDtoList.add(responseDto);
-        }
-        return ResponseEntity.ok(responseDtoList);
-    }
+//    @GetMapping("/route/title") // 제목으로 검색
+//    public ResponseEntity<?> getRoutesByTitle(@RequestParam String title){
+//        List<Route> routes = routeService.getRoutesByTitle(title);
+//        List<RouteDto> responseDtoList = new ArrayList<>();
+//        for (Route route : routes) {
+//            RouteDto responseDto = new RouteDto(route);
+//            responseDto.setUserNickname(route.getUser().getNickname());
+//            responseDtoList.add(responseDto);
+//        }
+//        return ResponseEntity.ok(responseDtoList);
+//    }
+
+//    @GetMapping("/evaluation/department") // 전공별로 불러오기
+//    public ResponseEntity<List<Evaluation>> getEvaluationsByDepartment(@RequestParam String department) {
+//        List<Evaluation> evaluations = evaluationRepository.findByDepartment(department);
+//        return ResponseEntity.ok(evaluations);
+//    }
+//
+//    @GetMapping
 
     @PutMapping("routes/{id}") // 루트추천 글 수정
     public ResponseEntity<RouteDto> updateRoute(@PathVariable int id, @Valid @RequestBody RouteEditRequest editResponse, HttpSession session) {
