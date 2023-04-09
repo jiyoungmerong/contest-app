@@ -29,7 +29,7 @@ public class User{
     @Column(length = 10, unique = true)
     private String nickname; // 닉네임
 
-    private int semester; // 학기
+    private String semester; // 학기
 
     private boolean graduate; // 졸업 여부
 

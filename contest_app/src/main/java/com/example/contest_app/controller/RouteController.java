@@ -31,7 +31,6 @@ public class RouteController {
 
     private final RouteRepository routeRepository;
 
-    private final RouteService routeService;
 
     @PostMapping("/save-route-info") // 선수과목제도 저장
     public ResponseEntity<String> saveRouteInfo(@RequestBody RouteInfoRequest request, HttpSession session) {

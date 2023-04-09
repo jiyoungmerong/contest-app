@@ -12,7 +12,7 @@ public class EditResponse {
 
     private String email;
     private String nickname;
-    private int semester;
+    private String semester;
     private boolean graduate;
     private boolean department;
     private boolean majorMinor;

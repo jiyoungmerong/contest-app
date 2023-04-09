@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class EvaluationEditRequest {
+public class EvaluationEditRequest { // 강의평 수정 요청
     private String lectureName; // 강의 이름
 
     private String prfsName; // 교수 이름

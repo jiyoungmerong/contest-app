@@ -98,27 +98,23 @@ public class UserController {
     } // 중복이면 true, 아니면 false
 
 
-    @GetMapping("/check-login") // 탈퇴, 정보수정 시 로그인
-    public ResponseEntity<Boolean> checkLogin(HttpSession session, @RequestBody loginRequest request) {
-        User user = (User) session.getAttribute("user");
+    @GetMapping("/check-login")
+    public ResponseEntity<Boolean> checkLogin(@RequestParam String email, @RequestParam String password) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        if (user == null) {
-            return ResponseEntity.ok(false); // 로그인되어 있지 않음
-        }
-
-        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
         if (!optionalUser.isPresent()) {
             return ResponseEntity.ok(false); // 유저가 없을 때
         }
 
         User foundUser = optionalUser.get();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (!passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
+        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
             return ResponseEntity.ok(false); // 비밀번호 틀렸을 때
         }
 
         return ResponseEntity.ok(true); // 이메일, 비번 다 맞을 때
     }
+
 
 
     @DeleteMapping("/delete") // 회원탈퇴

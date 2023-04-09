@@ -18,7 +18,7 @@ public class LoginResponse {
 
     private String major2;
 
-    private int semester;
+    private String semester;
 
     private boolean department; // 학부
 

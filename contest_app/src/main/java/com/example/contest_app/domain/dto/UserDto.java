@@ -21,7 +21,7 @@ public class UserDto {
 
     private String nickname; // 닉네임
 
-    private int semester;
+    private String semester;
 
     private boolean graduate; // 졸업 여부
 

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class EditRequest { // 회원정보 수정 요청
     private String nickname;
 
-    private int semester;
+    private String semester;
 
     private boolean graduate;
 

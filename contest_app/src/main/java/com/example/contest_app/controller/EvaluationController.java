@@ -1,12 +1,9 @@
 package com.example.contest_app.controller;
 
 import com.example.contest_app.domain.Evaluation;
-import com.example.contest_app.domain.Route;
 import com.example.contest_app.domain.User;
 import com.example.contest_app.domain.dto.EvaluationDto;
-import com.example.contest_app.domain.dto.RouteDto;
 import com.example.contest_app.domain.request.EvaluationEditRequest;
-import com.example.contest_app.domain.request.RouteEditRequest;
 import com.example.contest_app.repository.EvaluationRepository;
 import com.example.contest_app.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
