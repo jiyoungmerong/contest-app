@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class RouteDto {
+
+    private int id;
+
     private String title;
     private String department;
     private LocalDateTime createdAt;

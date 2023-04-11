@@ -1,14 +1,11 @@
 package com.example.contest_app.controller;
 
-import com.example.contest_app.domain.Evaluation;
 import com.example.contest_app.domain.Route;
 import com.example.contest_app.domain.User;
-import com.example.contest_app.domain.dto.EvaluationDto;
 import com.example.contest_app.domain.dto.RouteDto;
 import com.example.contest_app.domain.request.RouteEditRequest;
 import com.example.contest_app.domain.request.RouteInfoRequest;
 import com.example.contest_app.repository.RouteRepository;
-import com.example.contest_app.service.RouteService;
 import com.example.contest_app.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -66,19 +63,21 @@ public class RouteController {
 
         Route route = routeDto.toEntity();
         route.setRouteInfo(user.getRouteInfo()); // 사용자의 routeInfo 저장
-
         route.setNickname(user.getNickname()); // 사용자의 닉네임 저장
         route.setCreatedAt(LocalDateTime.now()); // 현재 시간 저장
+
         try {
             Route savedRoute = routeRepository.save(route);
 
             RouteDto responseDto = new RouteDto(savedRoute);
             responseDto.setUserNickname(savedRoute.getNickname()); // 닉네임 추가
+            responseDto.setId(savedRoute.getId()); // 루트 ID 추가
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while saving route.");
         }
     }
+
 
     @GetMapping("/user/routeInfo") //유저테이블에 있는 routeInfo 가져오기 (루트가져오기 버튼)
     public ResponseEntity<List<String>> getRecommendedRoutes(HttpSession session) {
@@ -99,6 +98,22 @@ public class RouteController {
         return ResponseEntity.ok(recommendedRoutes);
     }
 
+    @GetMapping("/detail/route/{id}") // 루트 ID로 불러오기
+    public ResponseEntity<?> getRouteById(@PathVariable int id) {
+        Optional<Route> optionalRoute = routeRepository.findById(id);
+        if (optionalRoute.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Route not found.");
+        }
+
+        Route route = optionalRoute.get();
+        RouteDto routeDto = new RouteDto(route);
+        routeDto.setRouteInfo(route.getRouteInfo());
+        routeDto.setUserNickname(route.getNickname());
+        routeDto.setCreatedAt(route.getCreatedAt()); // 생성된 시간 추가
+        routeDto.setId(route.getId()); // 루트 ID 추가
+
+        return ResponseEntity.ok(routeDto);
+    }
 
     @GetMapping("my-routes") // 내가 작성한 루트 보기
     public ResponseEntity<List<RouteDto>> getAllRoutes(HttpSession session){
@@ -107,29 +122,26 @@ public class RouteController {
         List<RouteDto> routeDtos = new ArrayList<>();
         for (Route route : routes) {
             RouteDto routeDto = new RouteDto();
+            routeDto.setId(route.getId()); // id 추가
             routeDto.setTitle(route.getTitle());
             routeDto.setDepartment(route.getDepartment());
             routeDto.setCreatedAt(route.getCreatedAt());
             routeDto.setUserNickname(route.getNickname());
             routeDto.setRouteInfo(route.getRouteInfo());
             routeDto.setRecommendation(route.getRecommendation());
-
             routeDtos.add(routeDto);
-
         }
         return ResponseEntity.ok(routeDtos);
-
     }
 
-
-
-    @GetMapping("/Allroutes") // 모든 루트 불러오기
+    @GetMapping("/all-routes") // 모든 루트 불러오기
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
         List<Route> routes = routeRepository.findAllOrderByCreateAtDesc();
         List<RouteDto> routeDtos = routes.stream().map(route -> {
             RouteDto dto = new RouteDto(route);
             dto.setUserNickname(route.getNickname());
             dto.setCreatedAt(route.getCreatedAt()); // 생성된 시간 추가
+            dto.setId(route.getId()); // id 추가
             return dto;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(routeDtos);

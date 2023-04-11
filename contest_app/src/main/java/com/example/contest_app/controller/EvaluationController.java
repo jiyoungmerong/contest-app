@@ -35,7 +35,6 @@ public class EvaluationController {
         return ResponseEntity.ok(evaluationList);
     }
 
-
     @PostMapping("/save/evaluation") // 강의평 저장
     public ResponseEntity<?> createEvaluation(@RequestBody EvaluationDto evaluationDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
@@ -44,6 +43,7 @@ public class EvaluationController {
         }
         Evaluation evaluation = evaluationService.createEvaluation(evaluationDto, user);
         EvaluationDto responseDto = new EvaluationDto();
+        responseDto.setId(evaluation.getId()); // id 추가
         responseDto.setLectureName(evaluation.getLectureName());
         responseDto.setPrfsName(evaluation.getPrfsName());
         responseDto.setClassYear(evaluation.getClassYear());
@@ -58,14 +58,14 @@ public class EvaluationController {
         return ResponseEntity.ok(responseDto);
     }
 
-
-    @GetMapping("/my-evaluations") // 내가 작성한 강의평 불러오기
+    @GetMapping("/my-evaluations") // 내가 작성한 강의평 불러오기 ( ID 추가 )
     public ResponseEntity<List<EvaluationDto>> getAllEvaluations(HttpSession session) {
         User user = (User) session.getAttribute("user");
         List<Evaluation> evaluations = evaluationRepository.findAll();
         List<EvaluationDto> responseDtos = new ArrayList<>();
         for (Evaluation evaluation : evaluations) {
             EvaluationDto responseDto = new EvaluationDto();
+            responseDto.setId(evaluation.getId()); // id 추가
             responseDto.setLectureName(evaluation.getLectureName());
             responseDto.setPrfsName(evaluation.getPrfsName());
             responseDto.setClassYear(evaluation.getClassYear());
@@ -83,6 +83,27 @@ public class EvaluationController {
         return ResponseEntity.ok(responseDtos);
     }
 
+    @GetMapping("/evaluations/{id}") // 해당 id의 강의평
+    public ResponseEntity<EvaluationDto> getEvaluationById(@PathVariable int id) {
+        Evaluation evaluation = evaluationService.getEvaluationById(id);
+        if (evaluation == null) {
+            return ResponseEntity.notFound().build();
+        }
+        EvaluationDto responseDto = new EvaluationDto();
+        responseDto.setId(evaluation.getId()); // id 추가
+        responseDto.setLectureName(evaluation.getLectureName());
+        responseDto.setPrfsName(evaluation.getPrfsName());
+        responseDto.setClassYear(evaluation.getClassYear());
+        responseDto.setSemester(evaluation.getSemester());
+        responseDto.setDepartment(evaluation.getDepartment());
+        responseDto.setTeamPlay(evaluation.getTeamPlay());
+        responseDto.setTask(evaluation.getTask());
+        responseDto.setPractice(evaluation.getPractice());
+        responseDto.setPresentation(evaluation.getPresentation());
+        responseDto.setReview(evaluation.getReview());
+        responseDto.setUserNickname(evaluation.getNickname());
+        return ResponseEntity.ok(responseDto);
+    }
 
     @PutMapping("/evaluation/{evaluation_id}") // 강의평 수정
     public ResponseEntity<EvaluationDto> updateEvaluation(@PathVariable int evaluation_id, @Valid @RequestBody EvaluationEditRequest evaluationEditRequest,
@@ -197,7 +218,6 @@ public class EvaluationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("evaluation not found.");
         }
     }
-
 
 
     @GetMapping("/evaluation/department") // 전공별로 불러오기

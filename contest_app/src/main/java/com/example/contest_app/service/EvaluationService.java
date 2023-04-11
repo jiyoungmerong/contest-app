@@ -40,4 +40,9 @@ public class EvaluationService {
     }
 
 
+    public Evaluation getEvaluationById(int evaluation_id) {
+        return evaluationRepository.findById(evaluation_id).orElse(null);
+    }
+
+
 }

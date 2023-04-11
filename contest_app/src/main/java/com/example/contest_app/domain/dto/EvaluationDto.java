@@ -9,6 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 public class EvaluationDto {
 
+    private int id;
+
+
     private String lectureName; // 강의 이름
 
     private String prfsName; // 교수 이름
