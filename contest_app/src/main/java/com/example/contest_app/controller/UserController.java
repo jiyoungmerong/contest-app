@@ -115,8 +115,6 @@ public class UserController {
         return ResponseEntity.ok(true); // 이메일, 비번 다 맞을 때
     }
 
-
-
     @DeleteMapping("/delete") // 회원탈퇴
     public ResponseEntity<String> deleteUser(HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");

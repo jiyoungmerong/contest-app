@@ -17,6 +17,9 @@ public interface RouteRepository extends JpaRepository<Route, Integer>{
 
     List<Route> findByUserNickname(String userNickname);
 
+    List<Route> findAllByNickname(String nickname);
+
+
     Page<Route> findAllByDepartmentContaining(String department, Pageable pageable);
 
     List<Route> findAllByDepartment(String department);

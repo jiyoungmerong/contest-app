@@ -61,7 +61,7 @@ public class EvaluationController {
     @GetMapping("/my-evaluations") // 내가 작성한 강의평 불러오기 ( ID 추가 )
     public ResponseEntity<List<EvaluationDto>> getAllEvaluations(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        List<Evaluation> evaluations = evaluationRepository.findAll();
+        List<Evaluation> evaluations = evaluationRepository.findAllByNickname(user.getNickname()); // 수정된 부분
         List<EvaluationDto> responseDtos = new ArrayList<>();
         for (Evaluation evaluation : evaluations) {
             EvaluationDto responseDto = new EvaluationDto();
@@ -82,6 +82,7 @@ public class EvaluationController {
         }
         return ResponseEntity.ok(responseDtos);
     }
+
 
     @GetMapping("/evaluations/{id}") // 해당 id의 강의평
     public ResponseEntity<EvaluationDto> getEvaluationById(@PathVariable int id) {
@@ -218,7 +219,6 @@ public class EvaluationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("evaluation not found.");
         }
     }
-
 
     @GetMapping("/evaluation/department") // 전공별로 불러오기
     public ResponseEntity<List<Evaluation>> getEvaluationsByDepartment(@RequestParam String department) {

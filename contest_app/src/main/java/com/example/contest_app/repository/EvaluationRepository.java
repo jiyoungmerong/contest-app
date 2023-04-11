@@ -19,6 +19,7 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
 
     List<Evaluation> findByLectureName(String lectureName);
 
+    List<Evaluation> findAllByNickname(String nickname);
 
 
 }

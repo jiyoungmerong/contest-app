@@ -28,7 +28,6 @@ public class RouteController {
 
     private final RouteRepository routeRepository;
 
-
     @PostMapping("/save-route-info") // 선수과목제도 저장
     public ResponseEntity<String> saveRouteInfo(@RequestBody RouteInfoRequest request, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -116,9 +115,9 @@ public class RouteController {
     }
 
     @GetMapping("my-routes") // 내가 작성한 루트 보기
-    public ResponseEntity<List<RouteDto>> getAllRoutes(HttpSession session){
+    public ResponseEntity<List<RouteDto>> getAllRoutes(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        List<Route> routes = routeRepository.findAll();
+        List<Route> routes = routeRepository.findAllByNickname(user.getNickname()); // 수정된 부분
         List<RouteDto> routeDtos = new ArrayList<>();
         for (Route route : routes) {
             RouteDto routeDto = new RouteDto();
@@ -133,6 +132,7 @@ public class RouteController {
         }
         return ResponseEntity.ok(routeDtos);
     }
+
 
     @GetMapping("/user/routes")
     public ResponseEntity<?> getUserRoutes(HttpSession httpSession) {
@@ -154,7 +154,6 @@ public class RouteController {
 
         return ResponseEntity.ok(responseList);
     }
-
 
     @GetMapping("/all-routes") // 모든 루트 불러오기
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
@@ -192,8 +191,6 @@ public class RouteController {
         routeRepository.save(route);
         return ResponseEntity.ok(new RouteDto(route));
     }
-
-
 
 
     @DeleteMapping("/routes/{id}") // 루트글 삭제
