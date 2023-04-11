@@ -134,6 +134,28 @@ public class RouteController {
         return ResponseEntity.ok(routeDtos);
     }
 
+    @GetMapping("/user/routes")
+    public ResponseEntity<?> getUserRoutes(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this resource.");
+        }
+
+        List<Route> routes = routeRepository.findByRouteInfo(user.getRouteInfo());
+
+        List<Map<String, Object>> responseList = new ArrayList<>();
+        for (Route route : routes) {
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("title", route.getTitle());
+            responseMap.put("routeInfo", route.getRouteInfo());
+            responseList.add(responseMap);
+        }
+
+        return ResponseEntity.ok(responseList);
+    }
+
+
     @GetMapping("/all-routes") // 모든 루트 불러오기
     public ResponseEntity<List<RouteDto>> findAllRoutes() {
         List<Route> routes = routeRepository.findAllOrderByCreateAtDesc();
@@ -146,7 +168,6 @@ public class RouteController {
         }).collect(Collectors.toList());
         return ResponseEntity.ok(routeDtos);
     }
-
 
     @PutMapping("routes/{id}") // 루트추천 글 수정
     public ResponseEntity<RouteDto> updateRoute(@PathVariable int id, @Valid @RequestBody RouteEditRequest editResponse, HttpSession session) {

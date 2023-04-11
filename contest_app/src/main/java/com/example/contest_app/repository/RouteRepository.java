@@ -26,6 +26,9 @@ public interface RouteRepository extends JpaRepository<Route, Integer>{
 
     List<Route> findByTitleContaining(String title);
 
+    List<Route> findByRouteInfo(String routeInfo);
+
+
 
 
 }
