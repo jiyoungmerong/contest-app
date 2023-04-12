@@ -51,7 +51,7 @@
 **✏️DATABASE**
 <br>
 <br>
-<img src="https://user-images.githubusercontent.com/49307827/231462156-f90d145c-6c83-46f0-af5a-ce11a4b7af62.png">
+<img width = "500px" src="https://user-images.githubusercontent.com/49307827/231462156-f90d145c-6c83-46f0-af5a-ce11a4b7af62.png">
 <br>
 <br>
 
