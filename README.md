@@ -35,11 +35,6 @@
 - MOBILE - IOS
 <br>
 
-**✏️주요 기술**
-- (Develop)
-- (Deploy)
-<br>
-
 **✏️API LIST**
 - [(Google Sheet) API LIST](https://docs.google.com/spreadsheets/d/1ZoWnLDblq2aaDzvEbMTEwCx34HS-Qy0fzOm_4k4j9wo/edit?usp=sharing)
 <br>
@@ -57,7 +52,10 @@
 <br>
 
 **✏️DEVELOP TIMELINE**
-- timeline img or writing
+<br>
+<br>
+<img src="https://user-images.githubusercontent.com/49307827/231466362-c0a20ae1-0f19-4a03-8959-6c7c61f3994f.png">
+<br>
 <br>
 
 ### DESIGN
