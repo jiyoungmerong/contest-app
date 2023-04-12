@@ -64,7 +64,7 @@
 **✏️대표 컬러**
 - 참고 사이트 : [https://colorhunt.co/](https://colorhunt.co/)
 
-> Point Color : #9AC1D1 / #C28D8D**
+> Point Color : #9AC1D1 / #C28D8D
 > color 1 : #FFFFFF
 > color 2 : #7D7D7D
 > color 3 : #4F4F4F
