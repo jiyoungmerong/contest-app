@@ -47,7 +47,7 @@
 **✏️FlowChart**
 <br>
 <br>
-<img height = "500px" src="https://user-images.githubusercontent.com/49307827/231462835-d602f090-de56-4795-b536-ed820c7efcff.png">
+<img height = "450px" src="https://user-images.githubusercontent.com/49307827/231462835-d602f090-de56-4795-b536-ed820c7efcff.png">
 
 **✏️DATABASE**
 <br>
