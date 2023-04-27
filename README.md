@@ -93,7 +93,7 @@
 
 **😋천성우**
 
-> Position : FRONT
+> Position : FRONT | DESIGN
 > 
 > Git : [https://github.com/cjs1399](https://github.com/cjs1399)
 > 
@@ -127,18 +127,8 @@
 
 **🤢박신영**
 
-> Position : FRONT
+> Position : FRONT | DESIGN
 > 
 > Git : [https://github.com/ParkSY0919](https://github.com/ParkSY0919)
 > 
 > Branch : psy
-
-# PLAN & DESIGN
-
-**🙃윤다혜**
-
-> Position : PLAN | DESIGN | MANAGEMENT
-> 
-> Git : [https://github.com/Rahdduru](https://github.com/Rahdduru)
-> 
-> Branch : X
