@@ -104,13 +104,3 @@
 > Git : [https://github.com/ParkSY0919](https://github.com/ParkSY0919)
 > 
 > Branch : psy
-
-# DESIGN
-
-**🙃윤다혜**
-
-> Position : DESIGN | 노션관리 | README관리
-> 
-> Git : [https://github.com/Rahdduru](https://github.com/Rahdduru)
-> 
-> Branch : X
