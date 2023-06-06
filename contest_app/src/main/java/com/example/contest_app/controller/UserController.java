@@ -1,18 +1,27 @@
 package com.example.contest_app.controller;
 
 import com.example.contest_app.domain.User;
+import com.example.contest_app.domain.dto.TokenDto;
 import com.example.contest_app.domain.dto.UserDto;
 import com.example.contest_app.domain.request.EditRequest;
 import com.example.contest_app.domain.request.loginRequest;
+import com.example.contest_app.domain.response.ApiResponseDto;
 import com.example.contest_app.domain.response.EditResponse;
+import com.example.contest_app.domain.response.LoginResponse;
 import com.example.contest_app.domain.response.LogoutResponse;
 
+import com.example.contest_app.jwt.TokenProvider;
 import com.example.contest_app.repository.UserRepository;
 import com.example.contest_app.service.UserService;
+import com.example.contest_app.status.ErrorStatus;
+import com.example.contest_app.status.SuccessStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -31,66 +40,68 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
-    private final PasswordEncoder passwordEncoder;
-
     private final UserRepository userRepository;
 
+    private final TokenProvider tokenProvider;
+
+
     @PostMapping("/users/new-user") // 회원가입
-    public ResponseEntity<String> join(@Valid @RequestBody UserDto userDto) { // @Valid 어노테이션 추가
-        try {
+    public ApiResponseDto<String> join(@Valid @RequestBody UserDto userDto) { // @Valid 어노테이션 추가
+        try{
+            if(userService.checkDuplicateEmail(userDto.getEmail())){
+                return ApiResponseDto.error(ErrorStatus.CONFLICT_EMAIL_EXCEPTION);
+            }
+            else if(userService.checkDuplicateNickname(userDto.getNickname())){
+                return ApiResponseDto.error(ErrorStatus.CONFLICT_NICKNAME_EXCEPTION);
+            }
             userService.save(userDto);
-            return ResponseEntity.ok("Join success"); // 메시지 명시
-        } catch (DuplicateKeyException e) { // 중복된 이메일인 경우
-            return ResponseEntity.badRequest().body("Join failed: Email already exists");
-        } catch (Exception e) { // 그 외의 예외 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패: " + e.getMessage());
+            return ApiResponseDto.success(SuccessStatus.SIGNUP_SUCCESS);
+        } catch (Exception e){
+            return ApiResponseDto.error(ErrorStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/users/login") // 로그인
-    public Map<String, Object> login(@RequestBody loginRequest request, HttpSession httpSession, HttpServletResponse response) {
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponseDto<TokenDto> login(@RequestBody @Valid final loginRequest request){
+        TokenDto tokenDto = userService.login(request.getEmail(), request.getPassword());
         User user = userService.findByEmail(request.getEmail());
-        Map<String, Object> responseBody = new HashMap<>();
+        user.updateLoginStatus(true);
+        userService.save(user);
+        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, tokenDto);
+    } // 추후 구현 : isLogin 상태 true로 업데이트
 
-        if (user == null) {
-            responseBody.put("status", "error");
-            responseBody.put("message", "User not found");
-            return responseBody;
-        }
+//    @PostMapping("/users/login") // 로그인
+//    public Map<String, Object> login(@RequestBody loginRequest request, HttpSession httpSession, HttpServletResponse response) {
+//        User user = userService.findByEmail(request.getEmail());
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            responseBody.put("status", "error");
-            responseBody.put("message", "Invalid password");
-            return responseBody;
-        }
-
-        user.setLogin(true); // 로그인 상태 업데이트
-        userService.save(user); // 변경된 로그인 상태 저장
-
-        httpSession.setAttribute("user", user); // 세션에 로그인 정보 유지
-
-        // 세션 아이디를 쿠키에 추가
-        Cookie sessionCookie = new Cookie("sessionId", httpSession.getId());
-        sessionCookie.setHttpOnly(true);
-        sessionCookie.setMaxAge(-1); // 브라우저를 닫으면 쿠키가 삭제됩니다.
-        response.addCookie(sessionCookie);
-
-        responseBody.put("sessionId", httpSession.getId());
-        responseBody.put("nickname", user.getNickname());
-        responseBody.put("major1", user.getMajor1());
-        responseBody.put("major2", user.getMajor2());
-        responseBody.put("semester", user.getSemester());
-        responseBody.put("department", user.isDepartment());
-        responseBody.put("email", user.getEmail());
-        responseBody.put("password", user.getPassword());
-        responseBody.put("graduate", user.isGraduate());
-        responseBody.put("major_minor", user.isMajor_minor());
-        responseBody.put("double_major", user.isDouble_major());
-        responseBody.put("login", user.isLogin());
-        responseBody.put("message", "Login Success");
-
-        return responseBody;
-    }
+//
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            responseBody.put("status", "error");
+//            responseBody.put("message", "Invalid password");
+//            return responseBody;
+//        }
+//
+//        user.setLogin(true); // 로그인 상태 업데이트
+//        userService.save(user); // 변경된 로그인 상태 저장
+//
+//
+//        responseBody.put("sessionId", httpSession.getId());
+//        responseBody.put("nickname", user.getNickname());
+//        responseBody.put("major1", user.getMajor1());
+//        responseBody.put("major2", user.getMajor2());
+//        responseBody.put("semester", user.getSemester());
+//        responseBody.put("department", user.isDepartment());
+//        responseBody.put("email", user.getEmail());
+//        responseBody.put("password", user.getPassword());
+//        responseBody.put("graduate", user.isGraduate());
+//        responseBody.put("major_minor", user.isMajor_minor());
+//        responseBody.put("double_major", user.isDouble_major());
+//        responseBody.put("login", user.isLogin());
+//        responseBody.put("message", "Login Success");
+//
+//        return responseBody;
+//    }
 
     @GetMapping("/checkDuplicate/{nickname}") // 닉네임 중복 확인
     public boolean checkDuplicateNickname(@PathVariable String nickname) {
