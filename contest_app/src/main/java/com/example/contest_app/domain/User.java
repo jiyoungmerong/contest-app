@@ -1,12 +1,19 @@
 package com.example.contest_app.domain;
 
+import com.example.contest_app.domain.request.loginRequest;
+import com.example.contest_app.domain.response.LoginResponse;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -15,7 +22,7 @@ import java.util.List;
 @Table(name="User")
 @AllArgsConstructor
 @Builder
-public class User{
+public class User implements UserDetails {
 
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +54,9 @@ public class User{
 
     @Column(name = "is_login")
     private boolean isLogin; // 로그인 여부
+    public void updateLoginStatus(boolean isLogin) {
+        this.isLogin = isLogin;
+    }
 
     @Column(name = "route_info")
     public String routeInfo; // 루트추천 저장
@@ -66,5 +76,49 @@ public class User{
         routes.add(route);
         route.setUser(this);
     }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
+
+    public User(String subject, String s, Collection<? extends GrantedAuthority> authorities) {
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 
 }
