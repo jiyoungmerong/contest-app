@@ -1,2 +1,4 @@
-package com.example.contest_app.domain.request;public class JoinRequest {
+package com.example.contest_app.domain.request;
+
+public class JoinRequest {
 }
