@@ -20,7 +20,6 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 @RestController
 @RequiredArgsConstructor
 public class RouteController {
@@ -105,12 +104,13 @@ public class RouteController {
         }
 
         Route route = optionalRoute.get();
-        RouteDto routeDto = new RouteDto(route);
-        routeDto.setRouteInfo(route.getRouteInfo());
-        routeDto.setUserNickname(route.getNickname());
-        routeDto.setCreatedAt(route.getCreatedAt()); // 생성된 시간 추가
-        routeDto.setId(route.getId()); // 루트 ID 추가
+//        RouteDto routeDto = new RouteDto(route);
+//        routeDto.setRouteInfo(route.getRouteInfo());
+//        routeDto.setUserNickname(route.getNickname());
+//        routeDto.setCreatedAt(route.getCreatedAt()); // 생성된 시간 추가
+//        routeDto.setId(route.getId()); // 루트 ID 추가
 
+        RouteDto routeDto = new RouteDto(route);
         return ResponseEntity.ok(routeDto);
     }
 
@@ -118,18 +118,22 @@ public class RouteController {
     public ResponseEntity<List<RouteDto>> getAllRoutes(HttpSession session) {
         User user = (User) session.getAttribute("user");
         List<Route> routes = routeRepository.findAllByNickname(user.getNickname()); // 수정된 부분
-        List<RouteDto> routeDtos = new ArrayList<>();
-        for (Route route : routes) {
-            RouteDto routeDto = new RouteDto();
-            routeDto.setId(route.getId()); // id 추가
-            routeDto.setTitle(route.getTitle());
-            routeDto.setDepartment(route.getDepartment());
-            routeDto.setCreatedAt(route.getCreatedAt());
-            routeDto.setUserNickname(route.getNickname());
-            routeDto.setRouteInfo(route.getRouteInfo());
-            routeDto.setRecommendation(route.getRecommendation());
-            routeDtos.add(routeDto);
-        }
+//        List<RouteDto> routeDtos = new ArrayList<>();
+//        for (Route route : routes) {
+//            RouteDto routeDto = new RouteDto(route);
+//            routeDto.setId(route.getId()); // id 추가
+//            routeDto.setTitle(route.getTitle());
+//            routeDto.setDepartment(route.getDepartment());
+//            routeDto.setCreatedAt(route.getCreatedAt());
+//            routeDto.setUserNickname(route.getNickname());
+//            routeDto.setRouteInfo(route.getRouteInfo());
+//            routeDto.setRecommendation(route.getRecommendation());
+//            routeDtos.add(routeDto);
+//        }
+
+        List<RouteDto> routeDtos = routes.stream()
+                .map(RouteDto::new)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(routeDtos);
     }
 

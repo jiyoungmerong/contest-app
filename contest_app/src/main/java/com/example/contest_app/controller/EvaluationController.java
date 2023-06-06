@@ -8,7 +8,6 @@ import com.example.contest_app.repository.EvaluationRepository;
 import com.example.contest_app.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class EvaluationController {
 
     @GetMapping("/AllEvaluation") // 모든 강의평 불러오기
     public ResponseEntity<List<Evaluation>> getPosts(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Evaluation> evaluationPage = evaluationRepository.findAll(pageable);
+        Page<Evaluation> evaluationPage = evaluationRepository.findAll((org.springframework.data.domain.Pageable) pageable);
         List<Evaluation> evaluationList = evaluationPage.getContent();
         return ResponseEntity.ok(evaluationList);
     }
@@ -82,29 +82,6 @@ public class EvaluationController {
         }
         return ResponseEntity.ok(responseDtos);
     }
-//
-//    @PostMapping("/evaluations/{id}")
-//    public ResponseEntity<EvaluationDto> getEvaluationById(@PathVariable int id) {
-//        Evaluation evaluation = evaluationService.getEvaluationById(id);
-//        if (evaluation == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        EvaluationDto responseDto = new EvaluationDto();
-//        responseDto.setId(evaluation.getId());
-//        responseDto.setLectureName(evaluation.getLectureName());
-//        responseDto.setPrfsName(evaluation.getPrfsName());
-//        responseDto.setClassYear(evaluation.getClassYear());
-//        responseDto.setSemester(evaluation.getSemester());
-//        responseDto.setDepartment(evaluation.getDepartment());
-//        responseDto.setTeamPlay(evaluation.getTeamPlay());
-//        responseDto.setTask(evaluation.getTask());
-//        responseDto.setPractice(evaluation.getPractice());
-//        responseDto.setPresentation(evaluation.getPresentation());
-//        responseDto.setReview(evaluation.getReview());
-//        responseDto.setUserNickname(evaluation.getNickname());
-//        return ResponseEntity.ok(responseDto);
-//    }
-
 
 
     @GetMapping("/evaluations/{id}") // 해당 id의 강의평
@@ -141,75 +118,7 @@ public class EvaluationController {
 
         Evaluation evaluation = optionalEvaluation.get();
 
-        if (evaluationEditRequest.getLectureName() != null) {
-            evaluation.setLectureName(evaluationEditRequest.getLectureName());
-        }
-        else{
-            evaluation.setNickname(evaluation.getNickname());
-        }
-
-        if (evaluationEditRequest.getPrfsName() != null) {
-            evaluation.setPrfsName(evaluationEditRequest.getPrfsName());
-        }
-        else{
-            evaluation.setPrfsName(evaluation.getPrfsName());
-        }
-
-        if (evaluationEditRequest.getClassYear() != 0) {
-            evaluation.setClassYear(evaluationEditRequest.getClassYear());
-        }
-        else{
-            evaluation.setClassYear(evaluation.getClassYear());
-        }
-
-        if (evaluationEditRequest.getSemester() != 0) {
-            evaluation.setSemester(evaluationEditRequest.getSemester());
-        }
-        else{
-            evaluation.setSemester(evaluation.getSemester());
-        }
-
-        if (evaluationEditRequest.getDepartment() != null) {
-            evaluation.setDepartment(evaluationEditRequest.getDepartment());
-        }
-        else{
-            evaluation.setDepartment(evaluation.getDepartment());
-        }
-
-        if (evaluationEditRequest.getTeamPlay() != 0) {
-            evaluation.setTeamPlay(evaluationEditRequest.getTeamPlay());
-        }
-        else{
-            evaluation.setTeamPlay(evaluation.getTeamPlay());
-        }
-
-        if (evaluationEditRequest.getTask() != 0) {
-            evaluation.setTask(evaluationEditRequest.getTask());
-        }
-        else{
-            evaluation.setTask(evaluation.getTask());
-        }
-
-        if (evaluationEditRequest.getPractice() != 0) {
-            evaluation.setPractice(evaluationEditRequest.getPractice());
-        }
-        else{
-            evaluation.setPresentation(evaluation.getPresentation());
-        }
-
-        if (evaluationEditRequest.getPresentation() != 0) {
-            evaluation.setPresentation(evaluationEditRequest.getPresentation());
-        }
-        else{
-            evaluation.setPresentation(evaluation.getPresentation());
-        }
-
-        if (evaluationEditRequest.getReview() != null) {
-            evaluation.setReview(evaluationEditRequest.getReview());
-        }
-        else{
-            evaluation.setReview(evaluation.getReview());
-        }
+        evaluation.update(evaluationEditRequest);
 
         evaluationRepository.save(evaluation);
         EvaluationDto evaluationDto = new EvaluationDto(evaluation);
