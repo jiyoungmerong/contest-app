@@ -1,5 +1,6 @@
 package com.example.contest_app.domain;
 
+import com.example.contest_app.domain.request.EvaluationEditRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -62,5 +63,18 @@ public class Evaluation {
     @JsonProperty("user")
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void update(EvaluationEditRequest request) {
+        this.lectureName = request.getLectureName();
+        this.prfsName = request.getPrfsName();
+        this.classYear = request.getClassYear();
+        this.semester = request.getSemester();
+        this.department = request.getDepartment();
+        this.teamPlay = request.getTeamPlay();
+        this.task = request.getTask();
+        this.practice = request.getPractice();
+        this.presentation = request.getPresentation();
+        this.review = request.getReview();
     }
 }
