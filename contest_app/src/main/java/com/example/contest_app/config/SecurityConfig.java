@@ -32,6 +32,8 @@ public class SecurityConfig{
                 .authorizeRequests()
                 .antMatchers("/users/new-user").permitAll() // 회원가입은 인증하지 않은 모든 사용자 허용
                 .antMatchers("/login").permitAll() // 로그인은 인증하지 않은 모든 사용자 허용
+                .antMatchers("/check").permitAll()
+                .antMatchers("/swagger-ui.html/**").permitAll()
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated() // 그 외의 요청은 인증된 사용자만 접근 가능
